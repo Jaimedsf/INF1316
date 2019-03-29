@@ -1,0 +1,515 @@
+NAGIB MOURA SUAID - 1710839
+PEDRO CHAMBERLAIN MATOS - 1710883
+
+QUESTÃO 1) 
+
+Faça um programa em que três processos executam em paralelo as seguintes ações:
+
+Pai - Imprime os números de 0 a 99, com um intervalo de 1 segundo entre a 
+impressão de cada número. Após imprimir todos os números, imprime a frase 
+“Processo pai vai finalizar” e finaliza quando o filho terminar.
+
+Filho - Imprime os números de 100 a 199, com um intervalo de 2 segundo entre a 
+impressão cada número. Antes de imprimir os números, imprime a frase “Filho foi 
+criado”.
+
+Após imprimir todos os números, imprime a frase “processo filho vai finalizar”
+e finaliza quando o neto terminar.
+
+Neto - filho do processo Filho (ou seja, neto do processo Pai). Imprime os números de 
+200 a 299, com um intervalo de 3 segundos entre cada número. Antes de imprimir os 
+números, imprime a frase “Neto foi criado”.
+
+Após imprimir todos os números, imprime a frase “processo neto vai finalizar” 
+e finaliza o processo.
+
+É possível observar os processos executando em paralelo? Como?
+
+-----------------------------------------------------------------------------------------
+
+LAB-01.C
+
+#include <stdio.h>
+
+int main () {
+	int status = 0, pid_pai = 0, pid_filho= 0, pid_neto = 0;
+	
+	pid_pai = getpid();
+	if (fork() != 0) {
+		for (int i = 0; i < 100; ++i) {
+			printf("PAI - PID: %d / i = %d\n", getpid(), i);
+			sleep(1);
+		}
+		printf("Processo pai vai finalizar\n");
+		waitpid(-1, &status, 0);
+	}
+	else {
+		pid_filho = getpid();
+		if (fork() != 0) {
+			printf("Filho foi criado\n");
+			for (int i = 100; i < 200; ++i) {
+				printf("FILHO - PID: %d / PID Pai: %d / i = %d\n", getpid(), pid_pai, i);
+				sleep(2);
+			}
+			printf("Processo filho vai finalizar\n");
+			waitpid(-1, &status, 0);
+		}
+		else {
+			printf("Neto foi criado\n");
+			for (int i = 200; i < 300; ++i) {
+				printf("NETO - PID: %d / PID Pai: %d / i = %d\n", getpid(), pid_filho, i);
+				sleep(3);
+			}
+			printf("Processo neto vai finalizar\n");
+		}
+	}
+	
+	return 0;
+}
+
+-----------------------------------------------------------------------------------------
+
+COMPILAÇÃO E EXECUÇÃO
+
+gcc -o lab-01 lab-01.c -g
+lab-01.c: In function ‘main’:
+lab-01.c:6:12: warning: implicit declaration of function ‘getpid’; did you mean ‘fgetpos’? [-Wimplicit-function-declaration]
+  pid_pai = getpid();
+            ^~~~~~
+            fgetpos
+lab-01.c:7:6: warning: implicit declaration of function ‘fork’ [-Wimplicit-function-declaration]
+  if (fork() != 0) {
+      ^~~~
+lab-01.c:11:4: warning: implicit declaration of function ‘sleep’ [-Wimplicit-function-declaration]
+    sleep(1);
+    ^~~~~
+lab-01.c:14:3: warning: implicit declaration of function ‘waitpid’ [-Wimplicit-function-declaration]
+   waitpid(-1, &status, 0);
+   ^~~~~~~
+./lab-01
+
+
+-----------------------------------------------------------------------------------------
+
+RESULTADO
+
+PAI - PID: 4274 / i = 0
+Filho foi criado
+Neto foi criado
+FILHO - PID: 4275 / PID Pai: 4274 / i = 100
+NETO - PID: 4276 / PID Pai: 4275 / i = 200
+PAI - PID: 4274 / i = 1
+PAI - PID: 4274 / i = 2
+FILHO - PID: 4275 / PID Pai: 4274 / i = 101
+NETO - PID: 4276 / PID Pai: 4275 / i = 201
+PAI - PID: 4274 / i = 3
+FILHO - PID: 4275 / PID Pai: 4274 / i = 102
+PAI - PID: 4274 / i = 4
+PAI - PID: 4274 / i = 5
+NETO - PID: 4276 / PID Pai: 4275 / i = 202
+FILHO - PID: 4275 / PID Pai: 4274 / i = 103
+PAI - PID: 4274 / i = 6
+PAI - PID: 4274 / i = 7
+FILHO - PID: 4275 / PID Pai: 4274 / i = 104
+PAI - PID: 4274 / i = 8
+NETO - PID: 4276 / PID Pai: 4275 / i = 203
+PAI - PID: 4274 / i = 9
+FILHO - PID: 4275 / PID Pai: 4274 / i = 105
+PAI - PID: 4274 / i = 10
+PAI - PID: 4274 / i = 11
+NETO - PID: 4276 / PID Pai: 4275 / i = 204
+FILHO - PID: 4275 / PID Pai: 4274 / i = 106
+PAI - PID: 4274 / i = 12
+PAI - PID: 4274 / i = 13
+FILHO - PID: 4275 / PID Pai: 4274 / i = 107
+PAI - PID: 4274 / i = 14
+NETO - PID: 4276 / PID Pai: 4275 / i = 205
+PAI - PID: 4274 / i = 15
+FILHO - PID: 4275 / PID Pai: 4274 / i = 108
+PAI - PID: 4274 / i = 16
+PAI - PID: 4274 / i = 17
+NETO - PID: 4276 / PID Pai: 4275 / i = 206
+FILHO - PID: 4275 / PID Pai: 4274 / i = 109
+PAI - PID: 4274 / i = 18
+PAI - PID: 4274 / i = 19
+FILHO - PID: 4275 / PID Pai: 4274 / i = 110
+PAI - PID: 4274 / i = 20
+NETO - PID: 4276 / PID Pai: 4275 / i = 207
+PAI - PID: 4274 / i = 21
+FILHO - PID: 4275 / PID Pai: 4274 / i = 111
+PAI - PID: 4274 / i = 22
+PAI - PID: 4274 / i = 23
+NETO - PID: 4276 / PID Pai: 4275 / i = 208
+FILHO - PID: 4275 / PID Pai: 4274 / i = 112
+PAI - PID: 4274 / i = 24
+PAI - PID: 4274 / i = 25
+FILHO - PID: 4275 / PID Pai: 4274 / i = 113
+PAI - PID: 4274 / i = 26
+NETO - PID: 4276 / PID Pai: 4275 / i = 209
+PAI - PID: 4274 / i = 27
+FILHO - PID: 4275 / PID Pai: 4274 / i = 114
+PAI - PID: 4274 / i = 28
+PAI - PID: 4274 / i = 29
+NETO - PID: 4276 / PID Pai: 4275 / i = 210
+FILHO - PID: 4275 / PID Pai: 4274 / i = 115
+PAI - PID: 4274 / i = 30
+PAI - PID: 4274 / i = 31
+FILHO - PID: 4275 / PID Pai: 4274 / i = 116
+PAI - PID: 4274 / i = 32
+NETO - PID: 4276 / PID Pai: 4275 / i = 211
+PAI - PID: 4274 / i = 33
+FILHO - PID: 4275 / PID Pai: 4274 / i = 117
+PAI - PID: 4274 / i = 34
+PAI - PID: 4274 / i = 35
+NETO - PID: 4276 / PID Pai: 4275 / i = 212
+FILHO - PID: 4275 / PID Pai: 4274 / i = 118
+PAI - PID: 4274 / i = 36
+PAI - PID: 4274 / i = 37
+FILHO - PID: 4275 / PID Pai: 4274 / i = 119
+PAI - PID: 4274 / i = 38
+NETO - PID: 4276 / PID Pai: 4275 / i = 213
+PAI - PID: 4274 / i = 39
+FILHO - PID: 4275 / PID Pai: 4274 / i = 120
+PAI - PID: 4274 / i = 40
+PAI - PID: 4274 / i = 41
+NETO - PID: 4276 / PID Pai: 4275 / i = 214
+FILHO - PID: 4275 / PID Pai: 4274 / i = 121
+PAI - PID: 4274 / i = 42
+PAI - PID: 4274 / i = 43
+FILHO - PID: 4275 / PID Pai: 4274 / i = 122
+PAI - PID: 4274 / i = 44
+NETO - PID: 4276 / PID Pai: 4275 / i = 215
+PAI - PID: 4274 / i = 45
+FILHO - PID: 4275 / PID Pai: 4274 / i = 123
+PAI - PID: 4274 / i = 46
+PAI - PID: 4274 / i = 47
+NETO - PID: 4276 / PID Pai: 4275 / i = 216
+FILHO - PID: 4275 / PID Pai: 4274 / i = 124
+PAI - PID: 4274 / i = 48
+PAI - PID: 4274 / i = 49
+FILHO - PID: 4275 / PID Pai: 4274 / i = 125
+PAI - PID: 4274 / i = 50
+NETO - PID: 4276 / PID Pai: 4275 / i = 217
+PAI - PID: 4274 / i = 51
+FILHO - PID: 4275 / PID Pai: 4274 / i = 126
+PAI - PID: 4274 / i = 52
+PAI - PID: 4274 / i = 53
+NETO - PID: 4276 / PID Pai: 4275 / i = 218
+FILHO - PID: 4275 / PID Pai: 4274 / i = 127
+PAI - PID: 4274 / i = 54
+PAI - PID: 4274 / i = 55
+FILHO - PID: 4275 / PID Pai: 4274 / i = 128
+PAI - PID: 4274 / i = 56
+NETO - PID: 4276 / PID Pai: 4275 / i = 219
+PAI - PID: 4274 / i = 57
+FILHO - PID: 4275 / PID Pai: 4274 / i = 129
+PAI - PID: 4274 / i = 58
+PAI - PID: 4274 / i = 59
+NETO - PID: 4276 / PID Pai: 4275 / i = 220
+FILHO - PID: 4275 / PID Pai: 4274 / i = 130
+PAI - PID: 4274 / i = 60
+PAI - PID: 4274 / i = 61
+FILHO - PID: 4275 / PID Pai: 4274 / i = 131
+PAI - PID: 4274 / i = 62
+NETO - PID: 4276 / PID Pai: 4275 / i = 221
+PAI - PID: 4274 / i = 63
+FILHO - PID: 4275 / PID Pai: 4274 / i = 132
+PAI - PID: 4274 / i = 64
+PAI - PID: 4274 / i = 65
+NETO - PID: 4276 / PID Pai: 4275 / i = 222
+FILHO - PID: 4275 / PID Pai: 4274 / i = 133
+PAI - PID: 4274 / i = 66
+PAI - PID: 4274 / i = 67
+FILHO - PID: 4275 / PID Pai: 4274 / i = 134
+PAI - PID: 4274 / i = 68
+NETO - PID: 4276 / PID Pai: 4275 / i = 223
+PAI - PID: 4274 / i = 69
+FILHO - PID: 4275 / PID Pai: 4274 / i = 135
+PAI - PID: 4274 / i = 70
+PAI - PID: 4274 / i = 71
+NETO - PID: 4276 / PID Pai: 4275 / i = 224
+FILHO - PID: 4275 / PID Pai: 4274 / i = 136
+PAI - PID: 4274 / i = 72
+PAI - PID: 4274 / i = 73
+FILHO - PID: 4275 / PID Pai: 4274 / i = 137
+PAI - PID: 4274 / i = 74
+NETO - PID: 4276 / PID Pai: 4275 / i = 225
+PAI - PID: 4274 / i = 75
+FILHO - PID: 4275 / PID Pai: 4274 / i = 138
+PAI - PID: 4274 / i = 76
+PAI - PID: 4274 / i = 77
+NETO - PID: 4276 / PID Pai: 4275 / i = 226
+FILHO - PID: 4275 / PID Pai: 4274 / i = 139
+PAI - PID: 4274 / i = 78
+PAI - PID: 4274 / i = 79
+FILHO - PID: 4275 / PID Pai: 4274 / i = 140
+PAI - PID: 4274 / i = 80
+NETO - PID: 4276 / PID Pai: 4275 / i = 227
+PAI - PID: 4274 / i = 81
+FILHO - PID: 4275 / PID Pai: 4274 / i = 141
+PAI - PID: 4274 / i = 82
+PAI - PID: 4274 / i = 83
+NETO - PID: 4276 / PID Pai: 4275 / i = 228
+FILHO - PID: 4275 / PID Pai: 4274 / i = 142
+PAI - PID: 4274 / i = 84
+PAI - PID: 4274 / i = 85
+FILHO - PID: 4275 / PID Pai: 4274 / i = 143
+PAI - PID: 4274 / i = 86
+NETO - PID: 4276 / PID Pai: 4275 / i = 229
+PAI - PID: 4274 / i = 87
+FILHO - PID: 4275 / PID Pai: 4274 / i = 144
+PAI - PID: 4274 / i = 88
+PAI - PID: 4274 / i = 89
+NETO - PID: 4276 / PID Pai: 4275 / i = 230
+FILHO - PID: 4275 / PID Pai: 4274 / i = 145
+PAI - PID: 4274 / i = 90
+PAI - PID: 4274 / i = 91
+FILHO - PID: 4275 / PID Pai: 4274 / i = 146
+PAI - PID: 4274 / i = 92
+NETO - PID: 4276 / PID Pai: 4275 / i = 231
+PAI - PID: 4274 / i = 93
+FILHO - PID: 4275 / PID Pai: 4274 / i = 147
+PAI - PID: 4274 / i = 94
+PAI - PID: 4274 / i = 95
+NETO - PID: 4276 / PID Pai: 4275 / i = 232
+FILHO - PID: 4275 / PID Pai: 4274 / i = 148
+PAI - PID: 4274 / i = 96
+PAI - PID: 4274 / i = 97
+FILHO - PID: 4275 / PID Pai: 4274 / i = 149
+PAI - PID: 4274 / i = 98
+NETO - PID: 4276 / PID Pai: 4275 / i = 233
+PAI - PID: 4274 / i = 99
+FILHO - PID: 4275 / PID Pai: 4274 / i = 150
+Processo pai vai finalizar
+NETO - PID: 4276 / PID Pai: 4275 / i = 234
+FILHO - PID: 4275 / PID Pai: 4274 / i = 151
+FILHO - PID: 4275 / PID Pai: 4274 / i = 152
+NETO - PID: 4276 / PID Pai: 4275 / i = 235
+FILHO - PID: 4275 / PID Pai: 4274 / i = 153
+NETO - PID: 4276 / PID Pai: 4275 / i = 236
+FILHO - PID: 4275 / PID Pai: 4274 / i = 154
+FILHO - PID: 4275 / PID Pai: 4274 / i = 155
+NETO - PID: 4276 / PID Pai: 4275 / i = 237
+FILHO - PID: 4275 / PID Pai: 4274 / i = 156
+NETO - PID: 4276 / PID Pai: 4275 / i = 238
+FILHO - PID: 4275 / PID Pai: 4274 / i = 157
+FILHO - PID: 4275 / PID Pai: 4274 / i = 158
+NETO - PID: 4276 / PID Pai: 4275 / i = 239
+FILHO - PID: 4275 / PID Pai: 4274 / i = 159
+NETO - PID: 4276 / PID Pai: 4275 / i = 240
+FILHO - PID: 4275 / PID Pai: 4274 / i = 160
+FILHO - PID: 4275 / PID Pai: 4274 / i = 161
+NETO - PID: 4276 / PID Pai: 4275 / i = 241
+FILHO - PID: 4275 / PID Pai: 4274 / i = 162
+NETO - PID: 4276 / PID Pai: 4275 / i = 242
+FILHO - PID: 4275 / PID Pai: 4274 / i = 163
+FILHO - PID: 4275 / PID Pai: 4274 / i = 164
+NETO - PID: 4276 / PID Pai: 4275 / i = 243
+FILHO - PID: 4275 / PID Pai: 4274 / i = 165
+NETO - PID: 4276 / PID Pai: 4275 / i = 244
+FILHO - PID: 4275 / PID Pai: 4274 / i = 166
+FILHO - PID: 4275 / PID Pai: 4274 / i = 167
+NETO - PID: 4276 / PID Pai: 4275 / i = 245
+FILHO - PID: 4275 / PID Pai: 4274 / i = 168
+NETO - PID: 4276 / PID Pai: 4275 / i = 246
+FILHO - PID: 4275 / PID Pai: 4274 / i = 169
+FILHO - PID: 4275 / PID Pai: 4274 / i = 170
+NETO - PID: 4276 / PID Pai: 4275 / i = 247
+FILHO - PID: 4275 / PID Pai: 4274 / i = 171
+NETO - PID: 4276 / PID Pai: 4275 / i = 248
+FILHO - PID: 4275 / PID Pai: 4274 / i = 172
+FILHO - PID: 4275 / PID Pai: 4274 / i = 173
+NETO - PID: 4276 / PID Pai: 4275 / i = 249
+FILHO - PID: 4275 / PID Pai: 4274 / i = 174
+NETO - PID: 4276 / PID Pai: 4275 / i = 250
+FILHO - PID: 4275 / PID Pai: 4274 / i = 175
+FILHO - PID: 4275 / PID Pai: 4274 / i = 176
+NETO - PID: 4276 / PID Pai: 4275 / i = 251
+FILHO - PID: 4275 / PID Pai: 4274 / i = 177
+NETO - PID: 4276 / PID Pai: 4275 / i = 252
+FILHO - PID: 4275 / PID Pai: 4274 / i = 178
+FILHO - PID: 4275 / PID Pai: 4274 / i = 179
+NETO - PID: 4276 / PID Pai: 4275 / i = 253
+FILHO - PID: 4275 / PID Pai: 4274 / i = 180
+NETO - PID: 4276 / PID Pai: 4275 / i = 254
+FILHO - PID: 4275 / PID Pai: 4274 / i = 181
+FILHO - PID: 4275 / PID Pai: 4274 / i = 182
+NETO - PID: 4276 / PID Pai: 4275 / i = 255
+FILHO - PID: 4275 / PID Pai: 4274 / i = 183
+NETO - PID: 4276 / PID Pai: 4275 / i = 256
+FILHO - PID: 4275 / PID Pai: 4274 / i = 184
+FILHO - PID: 4275 / PID Pai: 4274 / i = 185
+NETO - PID: 4276 / PID Pai: 4275 / i = 257
+FILHO - PID: 4275 / PID Pai: 4274 / i = 186
+NETO - PID: 4276 / PID Pai: 4275 / i = 258
+FILHO - PID: 4275 / PID Pai: 4274 / i = 187
+FILHO - PID: 4275 / PID Pai: 4274 / i = 188
+NETO - PID: 4276 / PID Pai: 4275 / i = 259
+FILHO - PID: 4275 / PID Pai: 4274 / i = 189
+NETO - PID: 4276 / PID Pai: 4275 / i = 260
+FILHO - PID: 4275 / PID Pai: 4274 / i = 190
+FILHO - PID: 4275 / PID Pai: 4274 / i = 191
+NETO - PID: 4276 / PID Pai: 4275 / i = 261
+FILHO - PID: 4275 / PID Pai: 4274 / i = 192
+NETO - PID: 4276 / PID Pai: 4275 / i = 262
+FILHO - PID: 4275 / PID Pai: 4274 / i = 193
+FILHO - PID: 4275 / PID Pai: 4274 / i = 194
+NETO - PID: 4276 / PID Pai: 4275 / i = 263
+FILHO - PID: 4275 / PID Pai: 4274 / i = 195
+NETO - PID: 4276 / PID Pai: 4275 / i = 264
+FILHO - PID: 4275 / PID Pai: 4274 / i = 196
+FILHO - PID: 4275 / PID Pai: 4274 / i = 197
+NETO - PID: 4276 / PID Pai: 4275 / i = 265
+FILHO - PID: 4275 / PID Pai: 4274 / i = 198
+NETO - PID: 4276 / PID Pai: 4275 / i = 266
+FILHO - PID: 4275 / PID Pai: 4274 / i = 199
+Processo filho vai finalizar
+NETO - PID: 4276 / PID Pai: 4275 / i = 267
+NETO - PID: 4276 / PID Pai: 4275 / i = 268
+NETO - PID: 4276 / PID Pai: 4275 / i = 269
+NETO - PID: 4276 / PID Pai: 4275 / i = 270
+NETO - PID: 4276 / PID Pai: 4275 / i = 271
+NETO - PID: 4276 / PID Pai: 4275 / i = 272
+NETO - PID: 4276 / PID Pai: 4275 / i = 273
+NETO - PID: 4276 / PID Pai: 4275 / i = 274
+NETO - PID: 4276 / PID Pai: 4275 / i = 275
+NETO - PID: 4276 / PID Pai: 4275 / i = 276
+NETO - PID: 4276 / PID Pai: 4275 / i = 277
+NETO - PID: 4276 / PID Pai: 4275 / i = 278
+NETO - PID: 4276 / PID Pai: 4275 / i = 279
+NETO - PID: 4276 / PID Pai: 4275 / i = 280
+NETO - PID: 4276 / PID Pai: 4275 / i = 281
+NETO - PID: 4276 / PID Pai: 4275 / i = 282
+NETO - PID: 4276 / PID Pai: 4275 / i = 283
+NETO - PID: 4276 / PID Pai: 4275 / i = 284
+NETO - PID: 4276 / PID Pai: 4275 / i = 285
+NETO - PID: 4276 / PID Pai: 4275 / i = 286
+NETO - PID: 4276 / PID Pai: 4275 / i = 287
+NETO - PID: 4276 / PID Pai: 4275 / i = 288
+NETO - PID: 4276 / PID Pai: 4275 / i = 289
+NETO - PID: 4276 / PID Pai: 4275 / i = 290
+NETO - PID: 4276 / PID Pai: 4275 / i = 291
+NETO - PID: 4276 / PID Pai: 4275 / i = 292
+NETO - PID: 4276 / PID Pai: 4275 / i = 293
+NETO - PID: 4276 / PID Pai: 4275 / i = 294
+NETO - PID: 4276 / PID Pai: 4275 / i = 295
+NETO - PID: 4276 / PID Pai: 4275 / i = 296
+NETO - PID: 4276 / PID Pai: 4275 / i = 297
+NETO - PID: 4276 / PID Pai: 4275 / i = 298
+NETO - PID: 4276 / PID Pai: 4275 / i = 299
+Processo neto vai finalizar
+
+-----------------------------------------------------------------------------------------
+
+CONCLUSÃO
+
+Assim como no exercício da aula anterior, ao utilizarmos inicialmente a função fork(), 
+criamos um processo filho idêntico ao pai. Antes de acessarmos o processo filho,
+fazemos novamente o uso da função fork(), criando um processo neto idêntico. 
+
+-----------------------------------------------------------------------------------------
+
+
+QUESTÃO 2)
+
+Implemente os seguintes programas: o primeiro exibe a mensagem “alo mundo!”, o segundo 
+implementa o programa echo do Unix, que exibe no terminal os argumentos do programa.
+
+Compile estes programas. Elabore um programa que crie e execute os dois programas 
+que você escreveu: o alomundo e o echo.
+
+Utilize alguma função da família "execv" para realizar esta atividade.
+
+Pergunta 1: O que você observou em termos de semelhanças e diferenças para 
+executar o alomundo e o echo?
+
+Pergunta 2: Indique como você decidiu implementar os programas. Há 
+concorrência? Há hierarquia entre os processos? Explique.
+
+-----------------------------------------------------------------------------------------
+
+ALOMUNDO.C
+
+#include<stdio.h>
+ 
+int main() {
+ 
+	printf("alo mundo!\n");
+	return 0;
+ 
+}
+
+ECHO.C
+
+#include <stdlib.h>
+#include <stdio.h>
+int main(int argc, char *argv[]){
+ 
+  for (int i = 1; i < argc-1; ++i){
+ 
+      printf("%s%s", argv[i], " ");
+  }
+ 
+  printf("%s%s", argv[argc-1], "\n");
+ 
+  return 0;
+}
+
+LAB-02.C
+
+#include <stdio.h>
+#include <unistd.h>
+
+int main(int argc, char *argv[]) {
+	int i;
+	char prog1[] = "alomundo" ;
+	char prog2[] = "echo" ;
+
+
+	if (fork()) {
+		waitpid(-1,&i,0);
+	execv(prog1,argv);
+
+	return 0;
+	}
+	else {
+		execv(prog2,argv);
+		return 0;
+	}
+}
+
+
+-----------------------------------------------------------------------------------------
+
+COMPILAÇÃO E EXECUÇÃO
+
+
+gcc -Wall -o lab-02 lab-02.c
+lab-02.c: In function ‘main’:
+lab-02.c:13:7: warning: implicit declaration of function ‘waitpid’; did you mean ‘getpid’? [-Wimplicit-function-declaration]
+       waitpid(-1,&i,0);
+       ^~~~~~~
+       getpid
+./lab-02 mundo alo
+
+-----------------------------------------------------------------------------------------
+
+RESULTADO
+
+mundo alo
+alo mundo!
+
+-----------------------------------------------------------------------------------------
+
+CONCLUSÃO
+
+Pergunta 1: Em questão de semelhança, foi utilizado a mesma função execv(), porém são
+diferentes na questão dos parâmetros, visto que alomundo.c não precisava de parâmetros,
+mas echo.c sim.
+
+Pergunta 2: Foi utilizado o fork() para realizar os dois processos. Da forma que fizemos,
+o processo pai (alomundo) é rodado apenas após o processo filho (echo.c) encerrar. Como um
+dos processos espera o outro, não existe uma concorrência entre os dois, tendo,
+no nosso caso, uma hierarquia. 
+
+
