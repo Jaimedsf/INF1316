@@ -1,0 +1,47 @@
+1. Quais os tipos de sistemas operacionais existentes?
+Windows, MAC OS, Linux
+
+2. Por que dizemos que existe uma subutilização de recursos em sistemas monoprogramáveis?
+Porque em sistemas monoprogramáveis somente é possível a execução de um programa por vez.
+Como um programa normalmente não utiliza todos recursos de um sistema ao longo de sua
+execução, existe subutilização de alguns recursos.
+
+3. Qual a grande diferença entre sistemas monoprogramáveis e sistemas multiprogramáveis?
+Os sistemas monoprogramáveis se caracterizam por permitir que o processador, a memória e os
+periféricos permaneçam exclusivamente dedicados à execução de um único programa. Nos sistemas
+multiprogramáveis, os recusos computacionais são compartilhados entre os diversos usuários e
+aplicações. Enquanto em sistemas monoprogramáveis existe apenas um programa utilizando os
+recursos disponíveis, nos multiprogramáveis várias aplicações compartilham esses mesmos recursos.
+
+4. Quais as vantagens dos sistemas multiprogramáveis?
+As vantagens do uso de sistemas multiprogramáveis são a redução do tempo de resposta das
+aplicações processadas no ambiente e de custos, a partir do compartilhamento dos diversos
+recursos do sistema entre as diferentes aplicações.
+
+5. Um sistema monousuário pode ser um sistema multiprogramável? Dê um exemplo.
+Sim, somente um usuário interage com o sistema podendo possuir diversas aplicações
+executando concorrentemente. O sistema Windows NT é um exemplo.
+
+6. Quais são os tipos de sistemas multiprogramáveis?
+Sistemas batch, sistemas de tempo compartilhado e sistemas de tempo real.
+
+7. O que caracteriza o processamento batch? Quais aplicações podem ser processadas neste tipo de ambiente?
+Os processamento batch tem a característica de não exigir a interação do usuário com a aplicação.
+Todas as entradas e saídas de dados da aplicação são implementadas por algum tipo de memória
+secundária, geralmente arquivos em disco. Alguns exemplos de aplicações originalmente processadas
+em batch são programas envolvendo cálculos numéricos, compilações, ordenações backups e todos
+aqueles onde não é necessária a interação com o usuário.
+
+8. Como funcionam os sistemas de tempo compartilhado? Quais as vantagens em utilizá-los?
+O usuário pode interagir diretamente com o sistema em cada fase do desenvolvimento de suas aplicações e, se preciso, modificá-las imediatamente. Devido a esse tipo de interação, estes sistemas também são conhecidos com on-line. Esses sistemas possuem uma linguagem de controle que permite ao usuário comunicar-se diretamente com o SO para obter informações, como por ex., verificar os arquivos que possui armazenados em disco. O sistema, normalmente, responde em poucos segundos à maioria desses comandos. Para cada usuário, o SO aloca uma fatia de tempo (time-slice) do processador. Caso o programa do usuário não esteja concluído nesse intervalo de tempo, ele é substituído por um de outro usuário, e fica esperando por uma nova fatia de tempo.
+
+9. Qual a grande diferença entre sistemas de tempo compartilhado e tempo real?
+   Quais aplicações são indicadas para sistemas de tempo real?
+
+O fator tempo de resposta. Nos sistemas de tempo real, os tempos de resposta devem estar
+dentro de limites rígidos. Aplicações de controle de processos, como no monitoramento de
+refinarias de petróleo, controle de tráfego aéreo, de usinas termoelétricas e nucleares são
+executadas em sistemas de tempo real.
+
+10. O que são sistemas com múltiplos processadores e quais as vantagens em utilizá-los?
+Os sistemas com múltiplos processadores caracterizam-se por possuir duas ou mais UCPs interligadas e trabalhando em conjunto. A vantagem deste tipo de sistema é permitir que vários programas sejam executados ao mesmo tempo ou que um mesmo programa seja subdividido em partes para serem executadas simultaneamente em mais de um processador.
