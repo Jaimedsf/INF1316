@@ -1,39 +1,54 @@
 #include <pthread.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 #include <unistd.h>
-#define NUM_THREADS 50
+#define NUM_POSITIONS 16000
+#define NUM_THREADS 1600
 
+int index = 1, max, min;
+int * vetor = NULL;
 
-
-int vetor[40] = { 23, 37, 85, 34, 70, 12, 56, 234, 578, 23, 89, 34, 45,
-	       		123, 12398, 23, 47, 456, 3, 234, 7856, 6789, 875, 1,
-	       		894, 26, 96, 78234, 2783, 73, -1, 34, 234, 45, 7823,
-	       		12, 456, 356, 78, 1 };
-int index = 0, max = 0;
-
-void * encontraMaior (int * vetor) {
+void * encontraNum (int * vetor) {
 	int ini = index;
-	index += 11;
-	
-	for (int i = ini; i <= ini + 10; ++i) {
-		if (vetor[i] > max)
+	index += 9;
+	if (index >= NUM_POSITIONS) {
+		index = NUM_POSITIONS - 1;
+	}
+
+	for (int i = ini; i <= index; ++i) {
+		if (vetor[i] > max) {
 			max = vetor[i];
+			printf("POSIÇÃO %d - NOVA MAX: %d\n", i, max);
+		}
+		if (vetor[i] < min) {
+			min = vetor[i];
+			printf("POSIÇÃO %d - NOVA MIN: %d\n", i, min);
+		}
 	}
 
 	pthread_exit(NULL);
 }
 
 int main() {
+	vetor = (int *) malloc(NUM_POSITIONS * sizeof(int));
 	pthread_t threads[NUM_THREADS];
-	int t;
-	for(t = 0; t < NUM_THREADS; t++) {
-		printf("Criando thread %d\n", t + 1);
-		pthread_create(&threads[t], NULL, encontraMaior, vetor);
+	srand(time(NULL)); 
+	
+	for(int i = 0; i < NUM_POSITIONS; i++) {
+		vetor[i] = rand();
 	}
-	for(t = 0; t < NUM_THREADS; t++) {
-		pthread_join(threads[t], NULL);
-		printf("---------- %d ----------\n", t);
+	
+	max = vetor[0];
+	min = vetor[0];
+	
+	for(int i = 0; i < NUM_THREADS; i++) {
+		pthread_create(&threads[i], NULL, encontraNum, vetor);
+	}
+	for(int i = 0; i < NUM_THREADS; i++) {
+		pthread_join(threads[i], NULL);
 	}
 
-	printf("Maior número encontrado no vetor foi: %d", max);
+	printf("Maior número encontrado no vetor foi: %d\n", max);
+	printf("Menor número encontrado no vetor foi: %d\n", min);
 }
