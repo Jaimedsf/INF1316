@@ -22,21 +22,42 @@ int semaforoP(int semId);
 //operação V
 int semaforoV(int semId);
 
-int main (void) {
-	int semId, segmento;
-	char * string;
+int main (int argc, char** argv) {
+	int semId, segmento, * pos;
+	char * string, char_aux;
 	
 	segmento = shmget (IPC_PRIVATE, 16 * sizeof(char), IPC_CREAT | IPC_EXCL | S_IRUSR | S_IWUSR);
 	string = (char *) shmat (segmento, 0, 0);
+	
+	segmento = shmget (IPC_PRIVATE, sizeof(int), IPC_CREAT | IPC_EXCL | S_IRUSR | S_IWUSR);
+	pos = (int *) shmat (segmento, 0, 0);
 
+	*pos = -1;
 	semId = semget (8752, 1, 0666 | IPC_CREAT);
 	setSemValue(semId);
 		
 
 	if (fork() != 0) { /* produtor */
+		int j=-1;
 		for (int i = 0; i < LOOP; ++i) {
 			semaforoP(semId);
-			fgets(string, 16, stdin);
+			
+			if (*pos == 15) {
+				semaforoV(semId);
+				continue;
+			}
+			
+			j++;
+			char_aux = argv[1][j];
+			printf ("\nchar = %c\n",char_aux);
+			
+			if (char_aux == '\0') {
+				semaforoV(semId);				
+				break;	
+			}
+			
+			*pos++;
+			string[*pos] = char_aux;
 			semaforoV(semId);
 		}
 		
@@ -44,9 +65,19 @@ int main (void) {
 		delSemValue(semId);
 	}
 	else { /* consumidor */
+		printf ("\nProcesso filho comecou\n");
+		printf("%s", string);
 		for (int j = 0; j < LOOP; ++j) {
+			printf ("\nJ = %d\n",j);
 			semaforoP(semId);
-			printf("%s", string); fflush(stdout);
+			printf ("\nProcesso filho POS = %d\n",*pos);
+			if (*pos == -1) {
+				semaforoV(semId);
+				continue;
+			}
+
+			printf("\n%c CONSUMIDO\n", string[*pos]);// fflush(stdout);
+			*pos--;			
 			semaforoV(semId);
 		}
 		
