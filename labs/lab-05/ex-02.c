@@ -1,10 +1,10 @@
 #include <sys/sem.h>
-#include <sys/shm.h>
-#include <sys/stat.h>
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <ctype.h>
+#include <sys/shm.h>
+#include <sys/stat.h>
+#include <wait.h>
 #define LOOP 64
 
 union semun {
@@ -22,72 +22,46 @@ int semaforoP(int semId);
 //operação V
 int semaforoV(int semId);
 
-int main (int argc, char** argv) {
-	int semId, segmento, * pos;
-	char * string, char_aux;
-	
-	segmento = shmget (IPC_PRIVATE, 16 * sizeof(char), IPC_CREAT | IPC_EXCL | S_IRUSR | S_IWUSR);
-	string = (char *) shmat (segmento, 0, 0);
-	
-	segmento = shmget (IPC_PRIVATE, sizeof(int), IPC_CREAT | IPC_EXCL | S_IRUSR | S_IWUSR);
-	pos = (int *) shmat (segmento, 0, 0);
+int main(void) {
+	int segmento, status, semId;
+	char * string;
 
-	*pos = -1;
-	semId = semget (8752, 1, 0666 | IPC_CREAT);
+	semId = semget (IPC_PRIVATE, 1, 0666 | IPC_CREAT);
 	setSemValue(semId);
-		
 
-	if (fork() != 0) { /* produtor */
-		int j=-1;
-		for (int i = 0; i < LOOP; ++i) {
+	segmento = shmget (IPC_PRIVATE, 16 * sizeof(char), IPC_CREAT | IPC_EXCL | S_IRUSR | S_IWUSR);
+    string = shmat (segmento, 0, 0);
+
+	if (fork() != 0) {	
+		printf("\n=== Processo produtor iniciado ===\n");
+
+		for (int i = 0; i < LOOP; i++) {
 			semaforoP(semId);
-			
-			if (*pos == 15) {
-				semaforoV(semId);
-				continue;
-			}
-			
-			j++;
-			char_aux = argv[1][j];
-			printf ("\nchar = %c\n",char_aux);
-			
-			if (char_aux == '\0') {
-				semaforoV(semId);				
-				break;	
-			}
-			
-			*pos++;
-			string[*pos] = char_aux;
+			printf("\nCONSOME: ");
+			scanf("%s", string);
 			semaforoV(semId);
 		}
-		
-		printf ("\nProcesso pai terminou\n");
-		delSemValue(semId);
-	}
-	else { /* consumidor */
-		printf ("\nProcesso filho comecou\n");
-		printf("%s", string);
-		for (int j = 0; j < LOOP; ++j) {
-			printf ("\nJ = %d\n",j);
-			semaforoP(semId);
-			printf ("\nProcesso filho POS = %d\n",*pos);
-			if (*pos == -1) {
-				semaforoV(semId);
-				continue;
-			}
 
-			printf("\n%c CONSUMIDO\n", string[*pos]);// fflush(stdout);
-			*pos--;			
+		printf("\n=== Processo produtor encerrado ===\n");
+	} 
+	else {	
+		printf("\n=== Processo consumidor iniciado ===\n");
+
+		for (int i = 0; i < LOOP; i++) {
+			semaforoP(semId);
+			printf("\nPRODUZ: %s\n", string);
 			semaforoV(semId);
 		}
-		
-		printf ("\nProcesso filho terminou\n");
+
+		printf("\n=== Processo consumidor encerrado ===\n");
 	}
 
+	shmdt (string);
+	shmctl (segmento, IPC_RMID, 0);
+	
+	delSemValue(semId);
 	return 0;
 }
-
-
 
 int setSemValue(int semId) {
 	union semun semUnion;
@@ -105,7 +79,7 @@ int semaforoP(int semId) {
 	semB.sem_num = 0;
 	semB.sem_op = -1;
 	semB.sem_flg = SEM_UNDO;
-	semop(semId, &semB, 1);
+	while(semop(semId, &semB, 1) != 0);
 	return 0;
 }
 
@@ -114,6 +88,6 @@ int semaforoV(int semId) {
 	semB.sem_num = 0;
 	semB.sem_op = 1;
 	semB.sem_flg = SEM_UNDO;
-	semop(semId, &semB, 1);
+	while(semop(semId, &semB, 1) != 0);
 	return 0;
 }
