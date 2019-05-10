@@ -33,15 +33,20 @@ em batch são programas envolvendo cálculos numéricos, compilações, ordenaç
 aqueles onde não é necessária a interação com o usuário.
 
 8. Como funcionam os sistemas de tempo compartilhado? Quais as vantagens em utilizá-los?
-O usuário pode interagir diretamente com o sistema em cada fase do desenvolvimento de suas aplicações e, se preciso, modificá-las imediatamente. Devido a esse tipo de interação, estes sistemas também são conhecidos com on-line. Esses sistemas possuem uma linguagem de controle que permite ao usuário comunicar-se diretamente com o SO para obter informações, como por ex., verificar os arquivos que possui armazenados em disco. O sistema, normalmente, responde em poucos segundos à maioria desses comandos. Para cada usuário, o SO aloca uma fatia de tempo (time-slice) do processador. Caso o programa do usuário não esteja concluído nesse intervalo de tempo, ele é substituído por um de outro usuário, e fica esperando por uma nova fatia de tempo.
+O usuário pode interagir diretamente com o sistema em cada fase do desenvolvimento de suas aplicações e, se preciso, modificá-las imediatamente.
+Devido a esse tipo de interação, estes sistemas também são conhecidos com on-line. Esses sistemas possuem uma linguagem de controle que permite
+ao usuário comunicar-se diretamente com o SO para obter informações, como por ex., verificar os arquivos que possui armazenados em disco.
+O sistema, normalmente, responde em poucos segundos à maioria desses comandos. Para cada usuário, o SO aloca uma fatia de tempo (time-slice)
+do processador. Caso o programa do usuário não esteja concluído nesse intervalo de tempo, ele é substituído por um de outro usuário, e
+fica esperando por uma nova fatia de tempo.
 
-9. Qual a grande diferença entre sistemas de tempo compartilhado e tempo real?
-   Quais aplicações são indicadas para sistemas de tempo real?
-
+9. Qual a grande diferença entre sistemas de tempo compartilhado e tempo real? Quais aplicações são indicadas para sistemas de tempo real?
 O fator tempo de resposta. Nos sistemas de tempo real, os tempos de resposta devem estar
 dentro de limites rígidos. Aplicações de controle de processos, como no monitoramento de
 refinarias de petróleo, controle de tráfego aéreo, de usinas termoelétricas e nucleares são
 executadas em sistemas de tempo real.
 
 10. O que são sistemas com múltiplos processadores e quais as vantagens em utilizá-los?
-Os sistemas com múltiplos processadores caracterizam-se por possuir duas ou mais UCPs interligadas e trabalhando em conjunto. A vantagem deste tipo de sistema é permitir que vários programas sejam executados ao mesmo tempo ou que um mesmo programa seja subdividido em partes para serem executadas simultaneamente em mais de um processador.
+Os sistemas com múltiplos processadores caracterizam-se por possuir duas ou mais UCPs interligadas e trabalhando em conjunto.
+A vantagem deste tipo de sistema é permitir que vários programas sejam executados ao mesmo tempo ou que um mesmo programa seja
+subdividido em partes para serem executadas simultaneamente em mais de um processador.
