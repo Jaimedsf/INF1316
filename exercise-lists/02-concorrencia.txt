@@ -31,6 +31,8 @@ componentes além do processador acessem a memória RAM diretamente, aumentando
 o desempenho na transferência de dados.
 
 8. Como a técnica de buffering permite aumentar a concorrência em um sistema computacional?
+As instruções de um dispositivo de E/S são armazenadas no buffer para então serem liberadas ao dispositivo para 
+uma nova instrução enquanto o processador executa outra tarefa.
 
 9. Explique o mecanismo de spooling de impressão.
 
@@ -38,5 +40,9 @@ o desempenho na transferência de dados.
 compilador (300Kb), software de correio eletrônico (200 Kb) e uma aplicação corporativa (500 Kb).
 Caso o sistema não implemente reentrância, qual o espaço de memória principal ocupado pelos programas quando 10 usuários estiverem utilizando todas as aplicações simultaneamente? Qual o espaço liberado
 quando o sistema implemente reentrância em todas as aplicações?
+Com reentrância: 200 + 300 + 200 + 500 = 1200Kb ~ 1.2Mb
+Sem reentrância: 1200 * 10 = 12000Kb ~ 12Mb
 
 11. Por que a questão da proteção torna-se fundamental em ambientes multiprogramáveis?
+Deve existir uma preocupação em garantir a confiabilidade e a integridade dos programas e dados 
+dos usuários, além do próprio sistema operacional. 
