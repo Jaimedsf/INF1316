@@ -21,10 +21,19 @@ indicada para armazenar informações sobre os diversos processos na memória pr
 7. Diferencie os tempos de processador, espera, turnaround e resposta.
 
 8. Diferencie os escalonamentos preemptivos e não-preemptivos.
+Um escalonamento preemptivo é um tipo de escalonamento que interrompe o processo corrente, dada
+alguma situação, para priorizar outro processo (circular). Já um escalonamento não-preemptivo é um tipo
+de escalonamento que se firma num processo até que ele se encerre (FIFO, SJF).
 
 9. Qual a diferença entre os escalonamentos FIFO e circular?
+FIFO é um escalonamento não-preemptivo que roda sequencialmente uma lista de processos por ordem
+de chegada. Já o escalonamento circular é preemptivo, que percorre a lista de processos rodando 
+cada processo por tempo determinado. 
 
 10. Descreva o escalonamento SJF e o escalonamento por prioridades.
+SJF é um escalonamento não-preemptivo que roda sequencialmente uma lista de processos por ordem
+de menos custoso por tempo. Escalonamento por prioridade também não-preemptivo que roda a lista
+de processos por ordem de prioridade.
 
 11. Qual a diferença entre preempção por tempo e preempção por prioridade?
 
@@ -41,12 +50,12 @@ descritas na tabela a seguir: Desenhe um diagrama ilustrando o escalonamento dos
 respectivos tempos de turnaround, segundo as políticas especificadas a seguir. O tempo de troca
 de contexto deve ser desconsiderado.
 
-Processo	-	Tempo de UCP	-	Prioridade
-P1			10 segundos		3
-P2			14 segundos		4
-P3			5 segundos		1
-P4			7 segundos		2
-P5			20 segundos		5
+Processo - Tempo de UCP	- Prioridade
+P1	   10 segundos	  3
+P2	   14 segundos	  4
+P3	    5 segundos	  1
+P4	    7 segundos	  2
+P5	   20 segundos	  5
 
 a) FIFO (first-in first-out)
 
@@ -110,11 +119,11 @@ executados para minimizar o tempo de turnaround dos processos?
 
 19. Considere a tabela a seguir onde:
 
-Processo	-	Tempo de UCP	-	Prioridade
-P1				40 segundos			4
-P2				20 segundos			2
-P3				50 segundos			1
-P4				30 segundos			3
+Processo - Tempo de UCP	- Prioridade
+P1	   40 segundos	  4
+P2	   20 segundos	  2
+P3	   50 segundos	  1
+P4	   30 segundos	  3
 
 Qual o tempo de turnaround médio dos processos considerando o tempo de troca de
 contexto igual a 0 e a 5 u.t. para os seguintes escalonamentos:
@@ -127,12 +136,12 @@ compartilhada. Existe uma única fila de processos no estado de pronto que é
 compartilhada entre os processadores. Neste sistema são criados 5 processos com os
 seguintes tempos:
 
-Processo	-	Tempo de UCP	-	Prioridade	-	Tempo de criação
-P1				10 segundos			1				0
-P2				6 segundos			7				2
-P3				12 segundos			5				4
-P4				11 segundos			2				8
-P5				7 segundos			4				11
+Processo - Tempo de UCP	- Prioridade - Tempo de criação
+P1	   10 segundos	  1	       0
+P2	    6 segundos	  7	       2
+P3	   12 segundos	  5	       4
+P4	   11 segundos	  2	       8
+P5	    7 segundos	  4	       11
 
 Desenhe um diagrama, mostrando o que está acontecendo em cada uma das CPUs até o
 fim da execução dos 5 processos e calcule o tempo de turnaround dos processos para o
