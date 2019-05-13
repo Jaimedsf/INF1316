@@ -5,8 +5,8 @@ As técnicas da concorrência estão presentes nos sistemas multiprogramáveis a
 interrupções, exceções, buffering, spooling e reentrância.
 
 2. Por que o mecanismo de interrupção é fundamental para a implementação da multiprogramação?
-Devido a concorrência dos programas pela utilização dos recursos do computador, ocorrem
-interrupções para que todos sejam ordenadamente executados parte a parte.
+Porque é em função desse mecanismo que o sistema operacional sincroniza a execução de todas as suas rotinas e dos 
+programas dos usuários, além de controlar dispositivos.
 
 3. Explique o mecanismo de funcionamento das interrupções.
 A interrupção ocorre quando um dos dispositivos solicita ao processador uma nova tarefa. Nesse
@@ -15,15 +15,19 @@ a execução anterior.
 
 4. O que são eventos síncronos e assíncronos? Como estes eventos estão relacionados ao
 mecanismo de interrupção e exceção?
-Eventos síncronos são eventos previsíveis que ocorrem sequencialmente, um após o outro, e
-normalmente são resultantes de programas em execução. Uma exceção é um evento síncrono.
+Eventos síncronos são eventos previsíveis, resultados diretos do processo corrente, que ocorrem sequencialmente,
+um após o outro, e normalmente são resultantes de programas em execução. Uma exceção é um evento síncrono.
 Eventos assíncronos são eventos não relacionados ao programa que está sendo executado, 
 sendo imprevisíveis ao processador. Uma interrupção é um evento assíncrono.
 
 5. Dê exemplos de eventos associados ao mecanismo de exceção.
-Uma divisão por zero gera uma excessão.
+Ocorrência de overflor ou divisão por zero.
 
 6. Qual a vantagem da E/S controlada por interrupção comparada com a técnica de polling?
+Na E/S controlada por interrupção, as operações de E/S podem ser realizadas de uma forma mais eficiente. Em vez do 
+sistema periodicamente verificar o estado de uma operação pendente como na técnica de polling, o próprio controlador 
+interrompe o processador para avisar do término da operação. Com esse mecanismo, o processador, após a execução de 
+um comando de leitura ou gravação, permanece livre para o processamento de outras tarefas. 
 
 7. O que é DMA e qual a vantagem desta técnica?
 Direct Memory Access é um dispositivo de hardware que permite que outros
@@ -31,10 +35,15 @@ componentes além do processador acessem a memória RAM diretamente, aumentando
 o desempenho na transferência de dados.
 
 8. Como a técnica de buffering permite aumentar a concorrência em um sistema computacional?
-As instruções de um dispositivo de E/S são armazenadas no buffer para então serem liberadas ao dispositivo para 
-uma nova instrução enquanto o processador executa outra tarefa.
+Como o buffering permite minimizar o problema da disparidade da velocidade de processamento existente entre o 
+processador e os dispositivos d e E/S, esta técnica permite manter, na maior parte do tempo, processador e dispositivos 
+de E/S ocupados. 
 
 9. Explique o mecanismo de spooling de impressão.
+No momento em que um comando de impressão é executado, as informações que serão impressas são gravadas antes 
+em um arquivo em disco, conhecido como arquivo de spool, liberando imediatamente o programa para outras 
+atividades. Posteriormente, o sistema operacional encarrega-se em direcionar o conteúdo do arquivo de spool para a 
+impressora.  
 
 10. Em um sistema multiprogramável, seus usuários utilizam o mesmo editor de textos (200 Kb),
 compilador (300Kb), software de correio eletrônico (200 Kb) e uma aplicação corporativa (500 Kb).
