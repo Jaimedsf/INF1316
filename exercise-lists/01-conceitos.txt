@@ -19,7 +19,7 @@ aplicações processadas no ambiente e de custos, a partir do compartilhamento d
 recursos do sistema entre as diferentes aplicações.
 
 5. Um sistema monousuário pode ser um sistema multiprogramável? Dê um exemplo.
-Sim, somente um usuário interage com o sistema podendo possuir diversas aplicações
+Sim, somente um usuário interage com o sistema, podendo possuir diversas aplicações
 executando concorrentemente. O sistema Windows NT é um exemplo.
 
 6. Quais são os tipos de sistemas multiprogramáveis?

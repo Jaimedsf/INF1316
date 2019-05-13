@@ -1,0 +1,58 @@
+Ainda se tratando de processos, vamos explorar como podemos enviar sinais entre esses.
+
+Um sinal, no caso, é uma interrupção, ou uma notificação assíncrona transmitida entre processos 
+através do sistema operacional. Um sinal é enviado, por exemplo, quando um processo termina de maneira anormal, enviando um sinal para um processo do sistema operacional indicando o que 
+deu errado.
+
+Sinais são numerados de 1 até 31 e cada um deles tem um macro predefinido pelo UNIX, dentre eles:
+
+SIGINT/2 - Interrupção
+SIGQUIT/3 - Sai do processo
+SIGILL/4 - Instrução ilegal
+SIGKILL/9 - Mata o processo
+SIGALRM/14 - Alarme de relógio
+SIGCONT/19 - Continua um processo parado
+SIGCHLD/20 - Para o processo pai quando um filho parar ou terminar
+
+Existem duas formas de enviar sinais a partir de um processo, dentre elas:
+	- A função kill, que recebe um parâmetro pid e o valor do sinal a ser enviado.
+	Se pid > 0, o sinal é enviado ao processo pid.
+	Se pid = 0, o sinal é enviado a todos os processos do grupo ao qual pertence o
+	processo corrente.
+	Se pid = -1, o sinal é enviado a todos os processos para os quais o processo
+	atual tem a permissão de fazer (exceto para o processo 1).
+	Se pid < -1, o sinal é enviado para TODOS os processos do grupo -pid.
+
+	- A função raise, que recebe um parâmetro sinal.
+	Ela envia um sinal para o processo que está sendo executado no momento.
+
+Você pode utilizar estes sinais livremente num terminal UNIX usando a função kill
+Exemplo: $ kill -s [SINAL] [PID]
+
+Sinais também podem ser enviados a um processo através do teclado:
+	- Ctrl-C: Envia SIGINT, interrompendo o processo.
+	- Ctrl-Z: Envia o sinal SIGTSTP, suspendendo o processo.
+	- Ctrl-\: Envia o sinal SIGABRT, causando o término imediato do processo
+
+Um processo pode capturar um sinal através de uma função handler. Ela é executada
+através de uma chamada implícita de função (quando um sinal é recebido). Para manipular
+sinais, utilizamos da função signal, que recebe o número do sinal a ser tratado e a função
+a ser ativada caso este sinal seja enviado. Exemplos:
+	- Para ignorar Ctrl-C: signal(SIGINT, SIG_IGN)
+	- Para permitir que o processo volte a aceitar Ctrl-C: signal(SIGINT, SIG_DFL)
+	- Para desviar para uma função quando Ctrl-C for digitado: signal(SIGINT, trataCtrlC)
+
+
+Existe uma função que pausa um processo até que ele receba um sinal chamada pause.
+pause não tem parâmetros, ele apenas aguarda para sempre.
+
+Existe também uma função de alarme que programa a entrega de um sinal a um processo dado
+um período de tempo. Primeiramente, você determina alguma utilidade ao alarme pela função
+signal. Sendo feita a configuração, chama-se a função alarm com o parâmetro de tempo.
+Exemplo:
+	signal(SIGALRM, func);
+	alarm(15);
+
+Existem algumas particularidades associadas a fork quando se trata de sinais.
+Após um fork, p tratamento de sinais é herdado pelo filho, mas o mesmo pode alterar o
+tratamento do sinal dentro de seu processo.

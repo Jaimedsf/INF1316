@@ -1,0 +1,141 @@
+1. Defina o conceito de processo
+
+2. Quais os cinco estados possíveis de um processo? Indique as possíveis transições de
+estados de um processo.
+
+3. O que é o contexto de hardware de um processo e como é a implementação da troca de 
+contexto?
+
+4. O que é o espaço de endereçamento de um processo? Como é decomposto?
+
+5. Como o sistema operacional implementa o conceito de processo? Qual a estrutura de dados
+indicada para armazenar informações sobre os diversos processos na memória principal?
+
+6. Explique a diferença entre processos foreground e background.
+
+7. Diferencie os tempos de processador, espera, turnaround e resposta.
+
+8. Diferencie os escalonamentos preemptivos e não-preemptivos.
+
+9. Qual a diferença entre os escalonamentos FIFO e circular?
+
+10. Descreva o escalonamento SJF e o escalonamento por prioridades.
+
+11. Qual a diferença entre preempção por tempo e preempção por prioridade?
+
+12. O que é um mecanismo de escalonamento adaptativo?
+
+13. Que tipo de escalonamento é exigido por aplicações de tempo real?
+
+14. Como o valor do time slice pode afetar o grau de multiprogramação em um sistema
+operacional? Qual a principal desvantagem de um time slice com um valor muito pequeno?
+E se o time slice for muito alto?
+
+15. Considere que cinco processos sejam criados no instante de tempo 0 e possuam características
+descritas na tabela a seguir: Desenhe um diagrama ilustrando o escalonamento dos processos e seus
+respectivos tempos de turnaround, segundo as políticas especificadas a seguir. O tempo de troca
+de contexto deve ser desconsiderado.
+
+Processo	-	Tempo de UCP	-	Prioridade
+P1				10 segundos			3
+P2				14 segundos			4
+P3				5 segundos			1
+P4				7 segundos			2
+P5				20 segundos			5
+
+a) FIFO (first-in first-out)
+
+	P1 -> P2 -> P3 -> P4 -> P5
+	5	  8	    3     4     1
+
+	Execução total: 30 u.t.
+
+b) SJF (Shortest job first)
+
+	P3 -> P4 -> P1 -> P2 -> P5
+	5	  7	    10    14    20
+
+	Execução total: 30 u.t.
+
+c) Prioridade (número menor implica prioridade maior)
+
+	P3 -> P4 -> P1 -> P2 -> P5
+	5	  7	    10    14    20
+
+	Execução total: 30 u.t.
+
+d) Circular com fatia de tempo igual a 2 u.t.
+
+	P1 -> P2 -> P3 -> P4 -> P5 -> P1 -> P2 -> P3   -> P4 -> P5
+	2     2     2	  2	2     2     2     1 + 1    2     2
+
+	P1   -> P2 -> P5 -> P2 -> P5 -> P2 -> P5 -> P5
+	1 + 1	2     2     2     2     2     2     2
+
+	Execução: 30 u.t.
+	Espera: 2 u.t.
+	Total: 32 u.t.
+
+16. Considere um sistema operacional que implemente escalonamento circular com fatia
+de tempo igual a 10 u.t. Em um determinado instante de tempo, existem apenas três 
+processos (P1, P2 e P3) na fila de pronto, e o tempo de UCP de cada processo é 18, 4
+e 13 u.t, respectivamente. Qual o estado de cada processo no instante de tempo T,
+considerando a execução dos processos P1, P2 e P3, nesta ordem, e que nenhuma
+operação de E/S é realizada?
+
+a) T = 8 u.t.
+b) T = 11 u.t.
+c) T = 33 u.t.
+
+17. Considere um sistema operacional que implemente escalonamento circular com fatia de tempo
+igual a 10 u.t. Em um determinado instante de tempo, existem apenas três
+processos (P1, P2 e P3) na fila de pronto, e o tempo de UCP de cada processo é 14, 4
+e 12 u.t, respectivamente. Qual o estado de cada processo no instante de tempo T,
+considerando a execução dos processos P1, P2 e P3, nesta ordem, e que apenas o
+processo P1 realiza operações de E/S? Cada operação de E/S é executada após 5 u.t. e
+consome 10 u.t.
+
+a) T = 8 u.t.
+b) T = 18 u.t.
+c) T = 28 u.t.
+
+18. Existem quatro processos (P1, P2, P3 e P4) na fila de pronto, com tempos de UCP
+estimados em 9, 6, 3 e 5, respectivamente. Em que ordem os processos devem ser
+executados para minimizar o tempo de turnaround dos processos?
+
+19. Considere a tabela a seguir onde:
+
+Processo	-	Tempo de UCP	-	Prioridade
+P1				40 segundos			4
+P2				20 segundos			2
+P3				50 segundos			1
+P4				30 segundos			3
+
+Qual o tempo de turnaround médio dos processos considerando o tempo de troca de
+contexto igual a 0 e a 5 u.t. para os seguintes escalonamentos:
+a) FIFO
+b) SJF
+c) Circular com fatia de tempo igual a 20 u.t.
+
+20. Considere um sistema com 2 processadores (CPU1 e CPU2) e memória
+compartilhada. Existe uma única fila de processos no estado de pronto que é
+compartilhada entre os processadores. Neste sistema são criados 5 processos com os
+seguintes tempos:
+
+Processo	-	Tempo de UCP	-	Prioridade	-	Tempo de criação
+P1				10 segundos			1				0
+P2				6 segundos			7				2
+P3				12 segundos			5				4
+P4				11 segundos			2				8
+P5				7 segundos			4				11
+
+Desenhe um diagrama, mostrando o que está acontecendo em cada uma das CPUs até o
+fim da execução dos 5 processos e calcule o tempo de turnaround dos processos para o
+seguinte esquema de escalonamento: Escalonamento Circular com Prioridade (maior
+número => mais prioritário) e fatia de tempo = 3 u.t.
+
+Observações:
+
+a) Desconsidere tempo de E/S, tempo de escalonamento ou troca de contexto entre
+processos.
+b) No tempo 0, serão buscados processos na fila de prontos para executar nas CPUs.

@@ -1,0 +1,39 @@
+1. O que é concorrência e como este conceito está presente nos sistemas operacionais multiprogramáveis?
+Concorrência é a possibilidade de executar instruções ao mesmo tempo que outras operações, é 
+o princípio básico para projeto e implementação de sistemas multiprogramáveis.
+As técnicas da concorrência estão presentes nos sistemas multiprogramáveis através de técnicas como
+interrupções, exceções, buffering, spooling e reentrância.
+
+2. Por que o mecanismo de interrupção é fundamental para a implementação da multiprogramação?
+Devido a concorrência dos programas pela utilização dos recursos do computador, ocorrem
+interrupções para que todos sejam ordenadamente executados parte a parte.
+
+3. Explique o mecanismo de funcionamento das interrupções.
+A interrupção ocorre quando um dos dispositivos solicita ao processador uma nova tarefa. Nesse
+caso, o processador interompe a execução e passa a executar a nova solicitação para então retomar
+a execução anterior.
+
+4. O que são eventos síncronos e assíncronos? Como estes eventos estão relacionados ao
+mecanismo de interrupção e exceção?
+Eventos síncronos são eventos previsíveis que ocorrem sequencialmente, um após o outro, e
+normalmente são resultantes de programas em execução. Uma exceção é um evento síncrono.
+Eventos assíncronos são eventos não relacionados ao programa que está sendo executado, 
+sendo imprevisíveis ao processador. Uma interrupção é um evento assíncrono.
+
+5. Dê exemplos de eventos associados ao mecanismo de exceção.
+Uma divisão por zero gera uma excessão.
+
+6. Qual a vantagem da E/S controlada por interrupção comparada com a técnica de polling?
+
+7. O que é DMA e qual a vantagem desta técnica?
+
+8. Como a técnica de buffering permite aumentar a concorrência em um sistema computacional?
+
+9. Explique o mecanismo de spooling de impressão.
+
+10. Em um sistema multiprogramável, seus usuários utilizam o mesmo editor de textos (200 Kb),
+compilador (300Kb), software de correio eletrônico (200 Kb) e uma aplicação corporativa (500 Kb).
+Caso o sistema não implemente reentrância, qual o espaço de memória principal ocupado pelos programas quando 10 usuários estiverem utilizando todas as aplicações simultaneamente? Qual o espaço liberado
+quando o sistema implemente reentrância em todas as aplicações?
+
+11. Por que a questão da proteção torna-se fundamental em ambientes multiprogramáveis?
