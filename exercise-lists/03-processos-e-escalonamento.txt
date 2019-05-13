@@ -1,5 +1,7 @@
 1. Defina o conceito de processo
-Um processo é um programa em execução.
+Um processo pode ser definido como o ambiente onde um programa é executado. Este ambiente, além das informações 
+sobre a execução, possui também o quanto de recursos do sistema cada programa pode utilizar, como o espaço de 
+endereçamento, tempo de processador e área em disco.
 
 2. Quais os cinco estados possíveis de um processo? Indique as possíveis transições de
 estados de um processo.
@@ -10,36 +12,72 @@ Execução -> Terminado.
 
 3. O que é o contexto de hardware de um processo e como é a implementação da troca de 
 contexto?
+O contexto de hardware armazena o conteúdo dos registradores gerais da UCP, além dos registradores de uso específico 
+como program counter (PC), stack pointer (SP) e registrador de status. Quando um processo está em execução, o seu 
+contexto de hardware está armazenado nos registradores do processador. No momento em que o processo perde a 
+utilização da UCP, o sistema salva as informações no contexto de hardware do processo. 
 
 4. O que é o espaço de endereçamento de um processo? Como é decomposto?
+O espaço de endereçamento é a área de memória pertencente ao processo onde as instruções e dados do programa são 
+armazenados para execução. Cada processo possui seu próprio espaço de endereçamento, que deve ser devidamente 
+protegido do acesso dos demais processos.
 
 5. Como o sistema operacional implementa o conceito de processo? Qual a estrutura de dados
 indicada para armazenar informações sobre os diversos processos na memória principal?
 
 6. Explique a diferença entre processos foreground e background.
+Um processo foreground é aquele que permite a comunicação direta do usuário com o processo durante o seu 
+processamento. Neste caso, tanto o canal de entrada quanto o de saída estão associados a um terminal com teclado, 
+mouse e monitor, permitindo, assim, a interação com o usuário. Um processo background é aquele onde não existe a 
+comunicação com o usuário durante o seu processamento. Neste caso, os canais de E/S não estão associados a nenhum 
+dispositivo de E/S interativo, mas em geral a arquivos de E/S. 
 
 7. Diferencie os tempos de processador, espera, turnaround e resposta.
+Tempo de processador é o tempo que leva para chamar o processo.
+Tempo de espera é equivalente ao tempo que o sistema espera dentro da fila.
+Turnaround é o tempo de vida do ciclo desde sua criação ao seu término.
+Tempo de resposta é o tempo entre a chamada e a resposta do processador.
 
 8. Diferencie os escalonamentos preemptivos e não-preemptivos.
-Um escalonamento preemptivo é um tipo de escalonamento que interrompe o processo corrente, dada
-alguma situação, para priorizar outro processo (circular). Já um escalonamento não-preemptivo é um tipo
-de escalonamento que se firma num processo até que ele se encerre (FIFO, SJF).
+No escalonamento preemptivo, o sistema operacional pode interromper um processo em execução e passá-lo para o 
+estado de pronto, com o objetivo de alocar outro processo na UCP. No escalonamento não-preemptivo,  quando um 
+processo está em execução, nenhum evento externo pode ocasionar a perda do uso do processador. O processo somente 
+sai do estado de execução, caso termine seu processamento ou execute instruções do próprio código que ocasionem uma 
+mudança para o estado de espera. 
 
 9. Qual a diferença entre os escalonamentos FIFO e circular?
-FIFO é um escalonamento não-preemptivo que roda sequencialmente uma lista de processos por ordem
-de chegada. Já o escalonamento circular é preemptivo, que percorre a lista de processos rodando 
-cada processo por tempo determinado. 
+O FIFO é um escalonamento não-preemptivo onde o processo que chegar primeiro ao estado de pronto é o selecionado 
+para execução. Este algoritmo é bastante simples, sendo necessária apenas uma fila, onde os processos que passam para 
+o estado de pronto entram no seu final e são escalonados quando chegam ao seu início. Quando um processo vai para o 
+estado de espera, o primeiro processo da fila de pronto é escalonado. Todos os processos quando saem do estado de 
+espera entram no final da fila de pronto. O Circular é um escalonamento preemptivo, projetado especialmente para 
+sistemas de tempo compartilhado. Esse algoritmo é bastan te semelhante ao FIFO, poré m, quando um processo  passa 
+para o estado de execução, existe um tempo limite para o uso contínuo do processador denominado fatia de tempo 
+(time-slice) ou quantum. 
 
 10. Descreva o escalonamento SJF e o escalonamento por prioridades.
-SJF é um escalonamento não-preemptivo que roda sequencialmente uma lista de processos por ordem
-de menos custoso por tempo. Escalonamento por prioridade também não-preemptivo que roda a lista
-de processos por ordem de prioridade.
+No escalonamento SJF, o algoritmo de escalonamento seleciona o processo que tiver o menor tempo de processador 
+ainda por executar. Dessa forma, o processo em estado de pronto que necessitar de menos tempo de UCP para terminar 
+seu processamento é selecionado para execução. O escalonamento por prioridades é um escalonamento do tipo 
+preemptivo realizado com base em um valor associado a cada processo denomidado prioridade de execução. O processo 
+com maior prioridade no estado de pronto é sempre o escolhido para execução e processos com valores iguais são 
+escalonados seguindo o critério de FIFO. Neste escalonamento, o conceito de fatia de tempo não existe, 
+conseqüentemente, um processo em execução não pode sofrer preempção por tempo. 
 
 11. Qual a diferença entre preempção por tempo e preempção por prioridade?
+Preempção por tempo ocorre quando o sistema operacional interrompe o processo em execução em função da expiração 
+da sua fatia de tempo, sub stituindo-o por outro processo. Preempção por pr ioridade, ocorre quando o sistema 
+operacional interrompe o processo em execução em função de um processo entrar em estado de pronto com prioridade 
+superior ao do processo em execução. 
 
 12. O que é um mecanismo de escalonamento adaptativo?
+É um mecanismo onde o sistema operacional identifica o comportamento dos processos durante sua execução 
+adaptando as políticas de escalonamento dinamicamente.
 
 13. Que tipo de escalonamento é exigido por aplicações de tempo real?
+Escalonamento por prioridades, onde é possível atribuir prioridades aos processos em função da sua importância. Além 
+disso, o mecanismo de preempção por prioridades garante o escalonamento imediato de processos críticos quando esses 
+passam para o estado de pronto. 
 
 14. Como o valor do time slice pode afetar o grau de multiprogramação em um sistema
 operacional? Qual a principal desvantagem de um time slice com um valor muito pequeno?
@@ -110,12 +148,25 @@ processo P1 realiza operações de E/S? Cada operação de E/S é executada apó
 consome 10 u.t.
 
 a) T = 8 u.t.
+	P1: Execução
+	P2: Pronto
+	P3: Pronto
+	
 b) T = 18 u.t.
+	P1: Terminado
+	P2: Execução
+	P3: Pronto
+	
 c) T = 28 u.t.
+	P1: Terminado
+	P2: Terminado
+	P3: Execução
 
 18. Existem quatro processos (P1, P2, P3 e P4) na fila de pronto, com tempos de UCP
 estimados em 9, 6, 3 e 5, respectivamente. Em que ordem os processos devem ser
 executados para minimizar o tempo de turnaround dos processos?
+A melhor política para minimizar o tempo de turnaround  seria utilizar o escalonamento SJF na sequência de execução 
+P3, P4, P2 e P1. 
 
 19. Considere a tabela a seguir onde:
 
@@ -127,7 +178,7 @@ P4	   30 segundos	  3
 
 Qual o tempo de turnaround médio dos processos considerando o tempo de troca de
 contexto igual a 0 e a 5 u.t. para os seguintes escalonamentos:
-a) FIFO
+a) FIFO	
 b) SJF
 c) Circular com fatia de tempo igual a 20 u.t.
 
