@@ -26,6 +26,9 @@ Uma divisão por zero gera uma excessão.
 6. Qual a vantagem da E/S controlada por interrupção comparada com a técnica de polling?
 
 7. O que é DMA e qual a vantagem desta técnica?
+Direct Memory Access é um dispositivo de hardware que permite que outros
+componentes além do processador acessem a memória RAM diretamente, aumentando
+o desempenho na transferência de dados.
 
 8. Como a técnica de buffering permite aumentar a concorrência em um sistema computacional?
 
