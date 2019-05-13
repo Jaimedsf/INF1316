@@ -1,7 +1,12 @@
 1. Defina o conceito de processo
+Um processo é um programa em execução.
 
 2. Quais os cinco estados possíveis de um processo? Indique as possíveis transições de
 estados de um processo.
+Os estados são: Criação (new), Execução (running), Espera (waiting), Pronto (ready) e Terminado (terminated). 
+As transições possíveis são: Criação -> Pronto, Pronto -> Espera, 
+Pronto -> Execução, Espera -> Pronto, Execução -> Pronto,
+Execução -> Terminado.
 
 3. O que é o contexto de hardware de um processo e como é a implementação da troca de 
 contexto?
@@ -37,30 +42,30 @@ respectivos tempos de turnaround, segundo as políticas especificadas a seguir. 
 de contexto deve ser desconsiderado.
 
 Processo	-	Tempo de UCP	-	Prioridade
-P1				10 segundos			3
-P2				14 segundos			4
-P3				5 segundos			1
-P4				7 segundos			2
-P5				20 segundos			5
+P1			10 segundos		3
+P2			14 segundos		4
+P3			5 segundos		1
+P4			7 segundos		2
+P5			20 segundos		5
 
 a) FIFO (first-in first-out)
 
 	P1 -> P2 -> P3 -> P4 -> P5
-	5	  8	    3     4     1
+	5     8	    3     4    1
 
 	Execução total: 30 u.t.
 
 b) SJF (Shortest job first)
 
 	P3 -> P4 -> P1 -> P2 -> P5
-	5	  7	    10    14    20
+	5     7	    10    14    20
 
 	Execução total: 30 u.t.
 
 c) Prioridade (número menor implica prioridade maior)
 
 	P3 -> P4 -> P1 -> P2 -> P5
-	5	  7	    10    14    20
+	5     7	    10    14    20
 
 	Execução total: 30 u.t.
 
