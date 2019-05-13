@@ -1,5 +1,6 @@
 1. Quais os tipos de sistemas operacionais existentes?
-Windows, MAC OS, Linux
+Sistemas monoprogramáveis ou monotarefa, sistemas multiprogramáveis ou multitarefa e sistemas com múltiplos 
+processadores.
 
 2. Por que dizemos que existe uma subutilização de recursos em sistemas monoprogramáveis?
 Porque em sistemas monoprogramáveis somente é possível a execução de um programa por vez.
