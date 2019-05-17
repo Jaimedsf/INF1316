@@ -10,7 +10,8 @@
 
 typedef struct Processo {
 
-   pid_t pid;
+   pid_t pid;           /*pid do processo*/
+   int prioridade;      /*a fila para a qual o processo deve voltar apos E/S*/
    int quant;           /*numero de quantuns consumidos pelo processo*/
    char nome[MAX_STR];  /*nome do programa*/
    char args[MAX_STR];  /*argumentos passados para o programa*/
@@ -38,14 +39,30 @@ na fila apos a insercao*/
 processo* getNext(fila* f);
 /*remove o proximo processo da fila f, retornando uma referencia para o mesmo*/
 
+void handler1(int s);
+/*tratador de SIGUSR1, suposto w4IO de um processo filho*/
+
+void handler2(int s);
+/*tratador de SIGCHLD, recebido quando processo filho termina*/
+
+enum interrupcao{
+   negativo,
+   IO,
+   terminou,
+};
+
+enum interrupcao interrupt = negativo;
+
 int main (int argc, char* argv[]) {
 
    int ret;
    int nProcs;
+   int i;
+   pid_t pid;
    char nome[MAX_STR];
    char args[MAX_STR];
    processo* proc;
-   fila * naoCriados;
+
    fila * terminados;
    fila * prioridade1;
    fila * prioridade2;
@@ -55,13 +72,14 @@ int main (int argc, char* argv[]) {
    FILE * arq;
    
    
-   naoCriados=criaFila();
    terminados=criaFila();
    prioridade1=criaFila();
    prioridade2=criaFila();
    prioridade3=criaFila();
    esperando=criaFila();
    
+   signal(SIGUSR1,handler1);
+   signal(SIGCHLD,handler2);
    
    arq = fopen(argv[1],"r");
    
@@ -72,13 +90,69 @@ int main (int argc, char* argv[]) {
       proc = (processo *) malloc(sizeof(processo));
       strcpy(proc->nome, nome);
       strcpy(proc->args, args);
-      insProc(proc,naoCriados);
+      pid=fork();
+      
+      if(pid == 0){
+         raise(SIGSTOP);
+         execv(nome,&args);
+         return 0;
+      }
+      proc->pid = pid;
+      proc->quant = 0;
+      insProc(proc,prioridade1);
       nProcs++;
 	  
       ret = fscanf(arq, "exec %s %s\n", nome, args);
    
    }
-
+   
+   
+   
+   while(nProcs>0){
+   
+   
+      ret=getMembros(prioridade1);/*tratamento da primeira fila, pode ser uma funcao(?)*/
+      for(i=0;i<ret;i++){
+         proc = getNext(prioridade1);
+         pid=proc->pid;
+         kill(pid,SIGCONT);
+         sleep(1);
+         kill(pid,SIGSTOP);
+         
+         proc->quant+=1;
+         if(interrupt == terminou){
+            insproc(proc,terminados);
+            nProcs--;
+         }
+         else{
+            if(interrupt == IO){
+               insproc(proc,esperando);
+               /*aumentaria prioridade se essa n fosse maxima*/
+               /*falta fazer a quarentena de 3 segundos para voltar para a fila*/
+            }
+            else{
+               insproc(proc,prioridade2);
+            }
+         }
+      }
+      
+   
+   
+   
+   
+   }
+   
+   free(prioridade1);
+   free(prioridade2);
+   free(prioridade3);
+   free(esperando);
+   proc=getNext(terminados);
+   
+   while(proc != NULL)
+      free(proc);
+      
+   free(terminados);
+   return 0;
 }
 
 
@@ -124,5 +198,13 @@ processo* getNext(fila* f){
    if(f->proximo < 0)
       f->proximo = MAX_PROCS-1;
    return ret;
+}
+
+void handler1(int s){
+   interrupt = IO;
+}
+
+void handler2(int s){
+   interrupt = terminou;
 }
 
