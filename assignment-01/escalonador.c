@@ -211,6 +211,7 @@ void manageFila(int prioridade) {
        pid=proc->pid;
 
        alarm(quantum);
+       printf("Executando %d\n",pid);
        kill(pid,SIGCONT);
        pause();
        
@@ -311,8 +312,8 @@ processo* getNext(fila* f, int remove){
 }
 
 void handler1(int s){
-  kill(proc->pid,SIGSTOP);
    alarm(0);
+   printf("%d pediu I/O\n",proc->pid);
    interrupt = IO;
    
    proc->prioridade = nSuperior;
@@ -323,6 +324,7 @@ void handler1(int s){
 void handler2(int s){
    kill(proc->pid,SIGKILL);
    alarm(0);
+   printf("%d terminou\n",proc->pid);
    interrupt = terminou;
   
    insProc(proc,terminados);
@@ -331,6 +333,7 @@ void handler2(int s){
 
 void handler3(int s){
   kill(proc->pid,SIGSTOP);
+  printf("%d esgotou seu quantum\n",proc->pid);
   interrupt = negativo;
   proc->prioridade = nInferior;
   insProc(proc,inferior);
