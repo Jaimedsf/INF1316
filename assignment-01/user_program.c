@@ -33,16 +33,16 @@ int main (int argc, char * argv[]) {
       n_rajadas++;
       string = &(argv[1][i+1]);
    }
-   
+   raise(SIGSTOP);
    for(i = 0; i < n_rajadas; i++) {
-      for(j = 0; j < rajadas[i]; j++) {
-         fflush(stdout);
+      for(j = 0; j < rajadas[i]; j++) { 
          printf("pid: %d| i: %d| j:%d\n", getpid(),i,j);
-         fflush(stdout);
          sleep(1);
       }
-      kill(pid_pai, SIGUSR1);
-      raise(SIGSTOP);
+      if(i != n_rajadas - 1){
+         kill(pid_pai, SIGUSR1);
+         raise(SIGSTOP);
+      }
    }
    kill(pid_pai, SIGUSR2);
    return 0;
