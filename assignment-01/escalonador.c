@@ -123,9 +123,7 @@ int main (int argc, char* argv[]) {
       strcat(pb,nome);
       pid=fork();
       
-      if(pid == 0){
-         fflush(stdout);
-         raise(SIGSTOP);
+      if(pid == 0){    
          execv(pb,parms);
          perror("execv");
          return 0;
@@ -143,6 +141,7 @@ int main (int argc, char* argv[]) {
    
    
    int i=0;
+   sleep(3);
    while(nProcs>0) {
      
       for(i=0;i<4;i++)
@@ -211,7 +210,7 @@ void manageFila(int prioridade) {
        pid=proc->pid;
 
        alarm(quantum);
-       printf("Executando %d\n",pid);
+       printf("Executando %d na fila %d\n",pid,prioridade);
        kill(pid,SIGCONT);
        pause();
        
