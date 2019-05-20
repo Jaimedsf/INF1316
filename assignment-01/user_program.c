@@ -1,3 +1,9 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <signal.h>
+#include <sys/types.h>
+#include <unistd.h>
+
 int main (int argc, char * argv[]) {
 
    int n_rajadas = 0;
@@ -11,9 +17,7 @@ int main (int argc, char * argv[]) {
       fflush(stdout);
       exit(1);
    }
-   
-   printf("PROGRAMA COMEÇOU\n");
-   fflush(stdout);
+
    pid_pai = getppid();
    
    string = &(argv[1][1]);
@@ -32,11 +36,13 @@ int main (int argc, char * argv[]) {
    
    for(i = 0; i < n_rajadas; i++) {
       for(j = 0; j < rajadas[i]; j++) {
+         fflush(stdout);
          printf("pid: %d| i: %d| j:%d\n", getpid(),i,j);
          fflush(stdout);
          sleep(1);
       }
       kill(pid_pai, SIGUSR1);
+      raise(SIGSTOP);
    }
    kill(pid_pai, SIGUSR2);
    return 0;
