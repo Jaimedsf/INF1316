@@ -181,7 +181,7 @@ void manageFila(int prioridade) {
   
    switch (prioridade) {
      case 1:
-       quantum = 1;
+       quantum = 2;
        corrente = prioridade1;
        inferior = prioridade2;
        nSuperior = 1;
@@ -189,7 +189,7 @@ void manageFila(int prioridade) {
        break;
        
      case 2:
-       quantum = 2;
+       quantum = 4;
        corrente = prioridade2;
        inferior = prioridade3;
        nSuperior = 1;
@@ -197,7 +197,7 @@ void manageFila(int prioridade) {
        break;
        
      case 3:
-       quantum = 4;
+       quantum = 8;
        corrente = prioridade3;
        inferior = prioridade3;
        nSuperior = 2;
