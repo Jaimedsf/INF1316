@@ -1,10 +1,3 @@
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <sys/types.h>
-#include <unistd.h>
-#include <signal.h>
-
 int main (int argc, char * argv[]) {
 
    int n_rajadas = 0;
@@ -15,9 +8,12 @@ int main (int argc, char * argv[]) {
    
    if(argc != 2) {
       printf("Uso errado do programa!");
+      fflush(stdout);
       exit(1);
    }
    
+   printf("PROGRAMA COMEÇOU\n");
+   fflush(stdout);
    pid_pai = getppid();
    
    string = &(argv[1][1]);
@@ -36,12 +32,14 @@ int main (int argc, char * argv[]) {
    
    for(i = 0; i < n_rajadas; i++) {
       for(j = 0; j < rajadas[i]; j++) {
-         printf("%d\n", getpid());
+         printf("pid: %d| i: %d| j:%d\n", getpid(),i,j);
+         fflush(stdout);
          sleep(1);
       }
       kill(pid_pai, SIGUSR1);
    }
-
+   kill(pid_pai, SIGUSR2);
    return 0;
 
 }
+
