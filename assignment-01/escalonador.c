@@ -1,3 +1,5 @@
+ESCALONADOR.C:
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/types.h>
@@ -13,10 +15,7 @@ typedef struct Processo {
 
    pid_t pid;           /*pid do processo*/
    int prioridade;      /*a fila para a qual o processo deve voltar apos E/S*/
-   int quant;           /*numero de quantuns consumidos pelo processo*/
    time_t timestamp;	  /*tempo que o processo perdura em dado momento*/
-   char nome[MAX_STR];  /*nome do programa*/
-   char args[MAX_STR];  /*argumentos passados para o programa*/
 
 } processo;
 
@@ -53,13 +52,9 @@ void handler3(int s);
 void manageFila(int quantum);
 /*tratador das filas de processo*/
 
-enum interrupcao{
-   negativo,
-   IO,
-   terminou,
-};
+void checkIO(void);
+/*verifica se algum processo em espera pode voltar a sua fila*/
 
-enum interrupcao interrupt = negativo;
 
 fila * terminados;
 fila * prioridade1;
@@ -116,21 +111,18 @@ int main (int argc, char* argv[]) {
    while (ret >= 0) {
    
       proc = (processo *) malloc(sizeof(processo));
-      strcpy(proc->nome, nome);
-      strcpy(proc->args, args);
       parms[0]=nome;
       parms[1]=args;
       strcat(pb,nome);
       pid=fork();
       
-      if(pid == 0){    
+      if(pid == 0){
          execv(pb,parms);
          perror("execv");
          return 0;
       }
       proc->prioridade = 1;
       proc->pid = pid;
-      proc->quant = 0;
       insProc(proc,prioridade1);
       nProcs++;
 	  
@@ -139,18 +131,23 @@ int main (int argc, char* argv[]) {
    
    }
    
-   
-   int i=0;
    sleep(3);
+   int i=0;
    while(nProcs>0) {
      
-      for(i=0;i<4;i++)
-        manageFila(1);
-    
-      for(i=0;i<2;i++)
-        manageFila(2);
-    
-      manageFila(3);
+      i=getMembros(prioridade1);
+      if(i>0){
+         manageFila(1);
+      }
+      else{
+         i=getMembros(prioridade2);
+         if(i>0){
+            manageFila(2);
+         }
+         else{
+            manageFila(3);
+         }
+      }
  
    }
    
@@ -172,11 +169,8 @@ int main (int argc, char* argv[]) {
               
 void manageFila(int prioridade) {
    int ret;
-
    
    pid_t pid;
-  
-  time_t segundos;
   
    switch (prioridade) {
      case 1:
@@ -210,60 +204,14 @@ void manageFila(int prioridade) {
        pid=proc->pid;
 
        alarm(quantum);
-       printf("Executando %d na fila %d\n",pid,prioridade);
+       printf("\n> Executando %d na fila %d\n",pid,prioridade);
        kill(pid,SIGCONT);
        pause();
-       
 
-       proc->quant+=1;
-
-
-      if(getMembros(esperando)>0){
-        proc = getNext(esperando, 0);
-        time(&segundos);
-
-        while( (difftime(segundos,proc->timestamp))>= 3){
-           switch(proc->prioridade){
-             case 1:
-               insProc(proc,prioridade1);
-               break;
-             case 2:
-               insProc(proc,prioridade2);
-               break;
-             case 3:
-               insProc(proc,prioridade3);
-               break;
-           }
-           getNext(esperando, 1);
-           proc = getNext(esperando, 0);
-           if (proc == NULL)
-               break;
-      }
-    }
+      checkIO();
   }  
 
-      if(getMembros(esperando)>0){
-        proc = getNext(esperando, 0);
-        time(&segundos);
-
-        while( (difftime(segundos,proc->timestamp))>= 3){
-           switch(proc->prioridade){
-             case 1:
-               insProc(proc,prioridade1);
-               break;
-             case 2:
-               insProc(proc,prioridade2);
-               break;
-             case 3:
-               insProc(proc,prioridade3);
-               break;
-           }
-           getNext(esperando, 1);
-           proc = getNext(esperando, 0);
-           if (proc == NULL)
-               break;
-      }
-    }
+  checkIO();
 }
 
 
@@ -311,9 +259,9 @@ processo* getNext(fila* f, int remove){
 }
 
 void handler1(int s){
+
    alarm(0);
-   printf("%d pediu I/O\n",proc->pid);
-   interrupt = IO;
+   printf("\n> %d pediu I/O\n",proc->pid);
    
    proc->prioridade = nSuperior;
    insProc(proc,esperando);
@@ -323,8 +271,7 @@ void handler1(int s){
 void handler2(int s){
    kill(proc->pid,SIGKILL);
    alarm(0);
-   printf("%d terminou\n",proc->pid);
-   interrupt = terminou;
+   printf("\n> %d terminou\n",proc->pid);
   
    insProc(proc,terminados);
    nProcs--;
@@ -332,9 +279,34 @@ void handler2(int s){
 
 void handler3(int s){
   kill(proc->pid,SIGSTOP);
-  printf("%d esgotou seu quantum\n",proc->pid);
-  interrupt = negativo;
+  printf("\n> %d esgotou seu quantum\n",proc->pid);
   proc->prioridade = nInferior;
   insProc(proc,inferior);
   
+}
+
+void checkIO(void){
+   time_t segundos;
+   if(getMembros(esperando)>0){
+        proc = getNext(esperando, 0);
+        time(&segundos);
+
+        while( (difftime(segundos,proc->timestamp))>= 3){
+           switch(proc->prioridade){
+             case 1:
+               insProc(proc,prioridade1);
+               break;
+             case 2:
+               insProc(proc,prioridade2);
+               break;
+             case 3:
+               insProc(proc,prioridade3);
+               break;
+           }
+           getNext(esperando, 1);
+           proc = getNext(esperando, 0);
+           if (proc == NULL)
+               break;
+      }
+   }
 }
