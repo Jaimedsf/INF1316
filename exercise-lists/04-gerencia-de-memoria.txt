@@ -1,0 +1,130 @@
+1. Explique como um endereço virtual de um processo é traduzido para 
+um endereço real na memória principal.
+
+2. Diferencie página virtual de uma página real.
+Página real é um conjunto de endereços de memória reais localizados
+na memória principal do sistema. A página real está sempre associada
+a uma página virtual.
+Já uma página virtual é um conjunto de endereços virtuais que faz parte
+do espaço de endereçamento virtual de um processo, ocupando um espaço na
+memória virtual do sistema operacional.  
+
+3. O que são tabelas de páginas e tabelas de segmentos?
+
+4. O que é um page fault, quando ocorre e quem controla a sua ocorrência?
+Como uma elevada taxa de page fault pode comprometer o sistema operacional?
+
+
+5. Descreva como ocorre a fragmentação interna em um sistema que implementa paginação.
+
+6. Um sistema com gerência de memória virtual por paginação possui tamanho de página com
+512 posições, espaço de endereçamento virtual com 512 páginas endereçadas de 0 à 511 e
+memória real com 10 páginas numeradas de 0 à 9. O conteúdo atual da memória real
+contém apenas informações de um único processo e é descrito resumidamente na tabela
+abaixo:
+
+Endereço Físico		Conteúdo
+1536			Página Virtual 34	
+2048			Página Virtual 9
+3072			Tabela de páginas
+3584			Página Virtual 65
+4608			Página Virtual 10
+
+a) Considere que a entrada da tabela de páginas contém, além do endereço do frame,
+também o número da página virtual. Mostre o conteúdo da tabela de páginas deste
+processo.
+
+b) Mostre o conteúdo da tabela de páginas após a página virtual de 49 ser carregada
+na memória a partir do endereço real 0 e a página virtual 34 ser substituída pela
+página virtual 12.
+
+c) Como é o formato do endereço virtual deste sistema (número de bits da tabela de
+páginas e número de bits do deslocamento)?
+
+d) Qual endereço físico está associado ao endereço virtual 4613?
+
+7. Um sistema operacional implementa gerência de memória virtual por paginação. Considere
+endereços virtuais com 16 bits, referenciados por um mesmo processo durante sua execução
+e sua tabela de páginas abaixo com no máximo 256 entradas, sendo que estão representadas
+apenas as páginas presentes na memória real. Indique para cada endereço virtual a seguir a
+página virtual em que o endereço se encontra, o respectivo deslocamento e se a página
+encontra-se na memória principal neste momento.
+
+Página		Endereço Físico
+0		8 Kb
+1		4 Kb
+2		24 Kb
+3		0 Kb
+4		16 Kb
+5		12 Kb
+9		20 Kb
+11		28 Kb
+
+a) (307) 10
+b) (2049) 10
+c) (2304) 10
+
+8. Por que programas não estruturados estão sujeitos a uma alta taxa de page faults?
+
+9. Considere um sistema com memória virtual por paginação com endereço virtual com 24 bits
+e página com 2048 endereços. Na tabela de páginas abaixo, de um processo em determinado
+instante de tempo, o bit de validade 1 indica página na memória principal e bit de
+modificação 1 indica que a página sofreu alteração.
+
+Página	BV  BM	End. do Frame
+0	1   1	30720
+1	1   0	0
+2	1   1	10240
+3	0   1	*****
+4	0   0	*****
+5	0   0	6144
+
+a) Quantos bits possui o campo deslocamento do endereço virtual?
+
+b) Qual o número máximo de entradas que a tabela de páginas pode ter?
+
+c) Qual o endereço físico que ocupa o último endereço da página 2?
+
+d) Qual o endereço físico traduzido do endereço virtual (00080A) 16 ?
+
+e) Caso ocorra um page fault e uma das páginas do processo deva ser descartada, quais
+páginas poderiam sofrer page out?
+
+10. Em um computador, o endereço virtual é de 16 bits e as páginas têm tamanho de 2Kb
+endereços. O WSL (Working Set List) de um processo qualquer é de quatro páginas.
+Inicialmente, nenhuma página está na memória principal. Um programa faz referência a
+endereços virtuais situados nas páginas 0, 7, 2, 7, 5, 8, 9, 2 e 4, nesta ordem.
+
+a) Quantos bits do endereço virtual destinam-se ao número da página? E ao
+deslocamento?
+
+b) Indique o comportamento da política de substituição LRU, mostrando, a cada
+referência, quais páginas estão em memória, os page faults causados e as páginas
+escolhidas para saírem da memória.
+
+11. Um sistema possui quatro frames. A tabela abaixo apresenta, para cada página, 
+o momento da carga, o momento do último acesso, o bit de referëncia e o 
+bit de modificação (Tanenbaum, 1992).
+
+		Último
+Frame	Carga	acesso	BR  BM
+0	126	279	0   0
+1	230	260	1   0	
+2	120	272	1   1
+3	160	280	1   1
+
+a) Qual página será substituída utilizando o algoritmo NRU?
+
+b) Qual página será substituída utilizando o algoritmo FIFO?
+
+c) Qual página será substituída utilizando o algoritmo LRU?
+
+12. Explique porque páginas pequenas podem aumentar a taxa de paginação.
+
+13. Um sistema computacional com espaço de endereçamento de 32 bits, utiliza uma tabela de
+páginas de dois níveis. Os endereços virtuais são divididos em um campo de 9 bits para o
+primeiro nível da tabela, outro de 11 bits para o segundo nível e um último campo para o
+deslocamento. Qual o tamanho das páginas? Quantas páginas podem existir no espaço de
+endereçamento virtual (Tanenbaum, 1992)?
+
+14. O que é o thrashing em sistemas que implementam memória virtual?
