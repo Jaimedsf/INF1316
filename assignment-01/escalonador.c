@@ -1,4 +1,4 @@
-ESCALONADOR.C:
+//ESCALONADOR.C:
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -54,6 +54,12 @@ void manageFila(int quantum);
 
 void checkIO(void);
 /*verifica se algum processo em espera pode voltar a sua fila*/
+
+void exibeFila(fila* f);
+/*exibe uma unica fila de processos*/
+
+void exibeFilas(void);
+/*exibe todas as filas de processos*/
 
 
 fila * terminados;
@@ -134,7 +140,8 @@ int main (int argc, char* argv[]) {
    sleep(3);
    int i=0;
    while(nProcs>0) {
-     
+      checkIO();
+      
       i=getMembros(prioridade1);
       if(i>0){
          manageFila(1);
@@ -145,7 +152,13 @@ int main (int argc, char* argv[]) {
             manageFila(2);
          }
          else{
-            manageFila(3);
+            i=getMembros(prioridade3);
+            if(i>0){
+               manageFila(3);
+            }
+            else{
+               sleep(1);
+            }
          }
       }
  
@@ -200,6 +213,7 @@ void manageFila(int prioridade) {
   
    ret=getMembros(corrente);
     for(int i=0;i<ret;i++){
+       exibeFilas();
        proc = getNext(corrente, 1);
        pid=proc->pid;
 
@@ -212,6 +226,7 @@ void manageFila(int prioridade) {
   }  
 
   checkIO();
+
 }
 
 
@@ -310,3 +325,59 @@ void checkIO(void){
       }
    }
 }
+
+void exibeFilas(void){
+
+   printf(">FILA 1: ");
+   exibeFila(prioridade1);
+   printf("fim\n");
+   
+   printf(">FILA 2: ");
+   exibeFila(prioridade2);
+   printf("fim\n");
+
+   printf(">FILA 3: ");
+   exibeFila(prioridade3);
+   printf("fim\n");
+   
+   printf(">ESPERANDO IO: ");
+   exibeFila(esperando);
+   printf("fim\n");
+
+}
+
+void exibeFila(fila* f){
+   
+   int membros=f->membros;   
+   
+   for(int i=0;i<membros;i++){
+      printf("%d -> ",f->vet[((f->proximo)+i)%MAX_PROCS]->pid);
+   }   
+   
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
