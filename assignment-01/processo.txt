@@ -1,3 +1,0 @@
-exec user_program (4,1,4)
-exec user_program (1,4,1)
-exec user_program (16)
