@@ -1,0 +1,46 @@
+1. Quais as principais funções do subsistema de E/S?
+Criar uma interface padronizada com os drivers de dispositivos e oferecer
+uma interface uniforme às camadas superiores.
+
+2. Qual a principal função de um device driver?
+Implementar através de controladores a comunicação do subsistema de E/S.
+
+3. Por que o sistema de E/S deve criar uma interface padronizada 
+com os device drivers?
+Para que não seja necessário alterar a camada de subsistema de E/S ao incluir novos drivers.
+
+4. Explique o funcionamento da técnica de DMA e sua principal vantagem.
+Inicialmente a UCP, através do device driver, inicializa os registradores do controlador.
+
+5. Diferencie os dispositivos de E/S estruturados (por blocos)
+dos não-estruturados (por caracteres).
+Os dispositivos estruturados (block devices) caracterizam-se por armazenar informações
+em blocos de tamanho fixo, possuindo cada qual um endereço que podem ser lidos ou gravados
+de forma independente dos demais. Discos magnéticos e ópticos são exemplos de dispositivos
+estruturados. Os dispositivos não-estruturados são aqueles que enviam ou recebem uma 
+seqüência de caracteres sem estar estruturada no formato de um bloco. Desse modo, a 
+seqüência de caracteres não é endereçável, não permitindo operações de acesso direto ao dado. Dispositivos como terminais, impressoras e interfaces de rede são exemplos de dispositivos não-estruturados. 
+
+6. Qual a principal razão de as operações de E/S em fitas e discos magnéticos 
+serem tão lentas se comparadas a velocidade com que o processador executa 
+instruções?
+A principal razão é o aspecto mecânico presente nas arquiteturas de fitas e
+discos magnéticos, devido a isso, o tempo total das operações de E/S é extremamente
+longo, se comparado ao número de instruções que o pro cessador pode executar no
+mesmo intervalo de tempo.
+
+7. Explique como funciona o esquema de entrada e saída orientada à interrupção.
+
+
+8. Explique as vantagens e desvantagens no acesso a disco, existentes entre os algoritmos de escalonamento de trilhas em disco.
+
+
+9. Considere um sistema onde três processos P1, P2 e P3 estejam sendo executados. Considere a presença dos recursos R1, R2, R3 e R4. A seguinte tabela mostra a necessidade de recursos para cada processo. Verifique graficamente se o sistema pode entrar em deadlock.
+Processos	Recursos utilizados pelos processos
+P1		R1, R4
+P2		R1, R2, R3
+P3		R2, R4
+
+
+10. Como pode-se minimizar a existência de gargalos de acesso a disco em setores
+consecutivos?

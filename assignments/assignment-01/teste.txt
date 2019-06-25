@@ -1,0 +1,5 @@
+exec user_program (1,1,1,1)
+exec user_program (3,2,2)
+exec user_program (7,4,4)
+exec user_program (7,3,1,1)
+
