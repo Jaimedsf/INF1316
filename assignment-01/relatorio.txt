@@ -62,6 +62,12 @@ void manageFila(int quantum);
 void checkIO(void);
 /*verifica se algum processo em espera pode voltar a sua fila*/
 
+void exibeFila(fila* f);
+/*exibe uma unica fila de processos*/
+
+void exibeFilas(void);
+/*exibe todas as filas de processos*/
+
 
 fila * terminados;
 fila * prioridade1;
@@ -71,7 +77,6 @@ fila * esperando;
 processo *proc;
 int nProcs;
 int quantum;
-fila* corrente;
 fila* inferior;
 int nSuperior;
 int nInferior;
@@ -141,7 +146,8 @@ int main (int argc, char* argv[]) {
    sleep(3);
    int i=0;
    while(nProcs>0) {
-     
+      checkIO();
+      
       i=getMembros(prioridade1);
       if(i>0){
          manageFila(1);
@@ -152,7 +158,13 @@ int main (int argc, char* argv[]) {
             manageFila(2);
          }
          else{
-            manageFila(3);
+            i=getMembros(prioridade3);
+            if(i>0){
+               manageFila(3);
+            }
+            else{
+               sleep(1);
+            }
          }
       }
  
@@ -176,7 +188,7 @@ int main (int argc, char* argv[]) {
               
 void manageFila(int prioridade) {
    int ret;
-   
+   fila* corrente;
    pid_t pid;
   
    switch (prioridade) {
@@ -207,6 +219,7 @@ void manageFila(int prioridade) {
   
    ret=getMembros(corrente);
     for(int i=0;i<ret;i++){
+       exibeFilas();
        proc = getNext(corrente, 1);
        pid=proc->pid;
 
@@ -219,6 +232,7 @@ void manageFila(int prioridade) {
   }  
 
   checkIO();
+
 }
 
 
@@ -318,7 +332,35 @@ void checkIO(void){
    }
 }
 
+void exibeFilas(void){
+
+   printf(">FILA 1: ");
+   exibeFila(prioridade1);
+   printf("fim\n");
    
+   printf(">FILA 2: ");
+   exibeFila(prioridade2);
+   printf("fim\n");
+
+   printf(">FILA 3: ");
+   exibeFila(prioridade3);
+   printf("fim\n");
+   
+   printf(">ESPERANDO IO: ");
+   exibeFila(esperando);
+   printf("fim\n");
+
+}
+
+void exibeFila(fila* f){
+   
+   int membros=f->membros;   
+   
+   for(int i=0;i<membros;i++){
+      printf("%d -> ",f->vet[((f->proximo)+i)%MAX_PROCS]->pid);
+   }   
+   
+}
 
 
 ##################################################################################
@@ -402,166 +444,228 @@ exec user_program (16)
 
 $ ./escalonador processo.txt
 
-> Executando 4266 na fila 1
-pid: 4266| i: 0| j:0
-pid: 4266| i: 0| j:1
+>FILA 1: 2935 -> 2936 -> 2937 -> 2938 -> fim
+>FILA 2: fim
+>FILA 3: fim
+>ESPERANDO IO: fim
 
-> 4266 esgotou seu quantum
+> Executando 2935 na fila 1
+pid: 2935| i: 0| j:0
 
-> Executando 4267 na fila 1
-pid: 4267| i: 0| j:0
+> 2935 pediu I/O
+>FILA 1: 2936 -> 2937 -> 2938 -> fim
+>FILA 2: fim
+>FILA 3: fim
+>ESPERANDO IO: 2935 -> fim
 
-> 4267 pediu I/O
+> Executando 2936 na fila 1
+pid: 2936| i: 0| j:0
+pid: 2936| i: 0| j:1
 
-> Executando 4268 na fila 1
-pid: 4268| i: 0| j:0
-pid: 4268| i: 0| j:1
+> 2936 esgotou seu quantum
+>FILA 1: 2937 -> 2938 -> fim
+>FILA 2: 2936 -> fim
+>FILA 3: fim
+>ESPERANDO IO: 2935 -> fim
 
-> 4268 esgotou seu quantum
+> Executando 2937 na fila 1
+pid: 2937| i: 0| j:0
+pid: 2937| i: 0| j:1
 
-> Executando 4266 na fila 2
-pid: 4266| i: 0| j:2
-pid: 4266| i: 0| j:3
+> 2937 esgotou seu quantum
+>FILA 1: 2938 -> 2935 -> fim
+>FILA 2: 2936 -> 2937 -> fim
+>FILA 3: fim
+>ESPERANDO IO: fim
 
-> 4266 pediu I/O
+> Executando 2938 na fila 1
+pid: 2938| i: 0| j:0
+pid: 2938| i: 0| j:1
 
-> Executando 4268 na fila 2
-pid: 4268| i: 0| j:2
-pid: 4268| i: 0| j:3
-pid: 4268| i: 0| j:4
-pid: 4268| i: 0| j:5
+> 2938 esgotou seu quantum
+>FILA 1: 2935 -> fim
+>FILA 2: 2936 -> 2937 -> 2938 -> fim
+>FILA 3: fim
+>ESPERANDO IO: fim
 
-> 4268 esgotou seu quantum
+> Executando 2935 na fila 1
+pid: 2935| i: 1| j:0
 
-> Executando 4267 na fila 1
-pid: 4267| i: 1| j:0
-pid: 4267| i: 1| j:1
+> 2935 pediu I/O
+>FILA 1: fim
+>FILA 2: 2936 -> 2937 -> 2938 -> fim
+>FILA 3: fim
+>ESPERANDO IO: 2935 -> fim
 
-> 4267 esgotou seu quantum
+> Executando 2936 na fila 2
+pid: 2936| i: 0| j:2
 
-> Executando 4266 na fila 1
-pid: 4266| i: 1| j:0
+> 2936 pediu I/O
+>FILA 1: fim
+>FILA 2: 2937 -> 2938 -> fim
+>FILA 3: fim
+>ESPERANDO IO: 2935 -> 2936 -> fim
 
-> 4266 pediu I/O
+> Executando 2937 na fila 2
+pid: 2937| i: 0| j:2
+pid: 2937| i: 0| j:3
+pid: 2937| i: 0| j:4
+pid: 2937| i: 0| j:5
 
-> Executando 4267 na fila 2
-pid: 4267| i: 1| j:2
-pid: 4267| i: 1| j:3
+> 2937 esgotou seu quantum
+>FILA 1: 2935 -> 2936 -> fim
+>FILA 2: 2938 -> fim
+>FILA 3: 2937 -> fim
+>ESPERANDO IO: fim
 
-> 4267 pediu I/O
+> Executando 2938 na fila 2
+pid: 2938| i: 0| j:2
+pid: 2938| i: 0| j:3
+pid: 2938| i: 0| j:4
+pid: 2938| i: 0| j:5
 
-> Executando 4268 na fila 3
-pid: 4268| i: 0| j:6
-pid: 4268| i: 0| j:7
-pid: 4268| i: 0| j:8
-pid: 4268| i: 0| j:9
-pid: 4268| i: 0| j:10
-pid: 4268| i: 0| j:11
-pid: 4268| i: 0| j:12
-pid: 4268| i: 0| j:13
+> 2938 esgotou seu quantum
+>FILA 1: 2935 -> 2936 -> fim
+>FILA 2: fim
+>FILA 3: 2937 -> 2938 -> fim
+>ESPERANDO IO: fim
 
-> 4268 esgotou seu quantum
+> Executando 2935 na fila 1
+pid: 2935| i: 2| j:0
 
-> Executando 4266 na fila 1
-pid: 4266| i: 2| j:0
-pid: 4266| i: 2| j:1
+> 2935 pediu I/O
+>FILA 1: 2936 -> fim
+>FILA 2: fim
+>FILA 3: 2937 -> 2938 -> fim
+>ESPERANDO IO: 2935 -> fim
 
-> 4266 esgotou seu quantum
+> Executando 2936 na fila 1
+pid: 2936| i: 1| j:0
+pid: 2936| i: 1| j:1
 
-> Executando 4267 na fila 1
-pid: 4267| i: 2| j:0
+> 2936 esgotou seu quantum
+>FILA 1: fim
+>FILA 2: 2936 -> fim
+>FILA 3: 2937 -> 2938 -> fim
+>ESPERANDO IO: 2935 -> fim
 
-> 4267 terminou
+> Executando 2936 na fila 2
 
-> Executando 4266 na fila 2
-pid: 4266| i: 2| j:2
-pid: 4266| i: 2| j:3
+> 2936 pediu I/O
+>FILA 1: fim
+>FILA 2: fim
+>FILA 3: 2937 -> 2938 -> fim
+>ESPERANDO IO: 2935 -> 2936 -> fim
 
-> 4266 terminou
+> Executando 2937 na fila 3
+pid: 2937| i: 0| j:6
 
-> Executando 4268 na fila 3
-pid: 4268| i: 0| j:14
-pid: 4268| i: 0| j:15
+> 2937 pediu I/O
+>FILA 1: 2935 -> fim
+>FILA 2: fim
+>FILA 3: 2938 -> fim
+>ESPERANDO IO: 2936 -> 2937 -> fim
 
-> 4268 terminou
+> Executando 2938 na fila 3
+pid: 2938| i: 0| j:6
 
+> 2938 pediu I/O
+>FILA 1: 2935 -> fim
+>FILA 2: fim
+>FILA 3: fim
+>ESPERANDO IO: 2936 -> 2937 -> 2938 -> fim
+
+> Executando 2935 na fila 1
+pid: 2935| i: 3| j:0
+
+> 2935 terminou
+>FILA 1: 2936 -> fim
+>FILA 2: fim
+>FILA 3: fim
+>ESPERANDO IO: 2937 -> 2938 -> fim
+
+> Executando 2936 na fila 1
+pid: 2936| i: 2| j:0
+pid: 2936| i: 2| j:1
+
+> 2936 esgotou seu quantum
+>FILA 1: fim
+>FILA 2: 2936 -> 2937 -> 2938 -> fim
+>FILA 3: fim
+>ESPERANDO IO: fim
+
+> Executando 2936 na fila 2
+
+> 2936 terminou
+>FILA 1: fim
+>FILA 2: 2937 -> 2938 -> fim
+>FILA 3: fim
+>ESPERANDO IO: fim
+
+> Executando 2937 na fila 2
+pid: 2937| i: 1| j:0
+pid: 2937| i: 1| j:1
+pid: 2937| i: 1| j:2
+pid: 2937| i: 1| j:3
+
+> 2937 esgotou seu quantum
+>FILA 1: fim
+>FILA 2: 2938 -> fim
+>FILA 3: 2937 -> fim
+>ESPERANDO IO: fim
+
+> Executando 2938 na fila 2
+pid: 2938| i: 1| j:0
+pid: 2938| i: 1| j:1
+pid: 2938| i: 1| j:2
+
+> 2938 pediu I/O
+>FILA 1: fim
+>FILA 2: fim
+>FILA 3: 2937 -> fim
+>ESPERANDO IO: 2938 -> fim
+
+> Executando 2937 na fila 3
+
+> 2937 pediu I/O
+>FILA 1: 2938 -> fim
+>FILA 2: 2937 -> fim
+>FILA 3: fim
+>ESPERANDO IO: fim
+
+> Executando 2938 na fila 1
+pid: 2938| i: 2| j:0
+
+> 2938 pediu I/O
+>FILA 1: fim
+>FILA 2: 2937 -> fim
+>FILA 3: fim
+>ESPERANDO IO: 2938 -> fim
+
+> Executando 2937 na fila 2
+pid: 2937| i: 2| j:0
+pid: 2937| i: 2| j:1
+pid: 2937| i: 2| j:2
+pid: 2937| i: 2| j:3
+
+> 2937 esgotou seu quantum
+>FILA 1: 2938 -> fim
+>FILA 2: fim
+>FILA 3: 2937 -> fim
+>ESPERANDO IO: fim
+
+> Executando 2938 na fila 1
+pid: 2938| i: 3| j:0
+
+> 2938 terminou
+>FILA 1: fim
+>FILA 2: fim
+>FILA 3: 2937 -> fim
+>ESPERANDO IO: fim
+
+> Executando 2937 na fila 3
+
+> 2937 terminou
 
 ----------------------------------------------------------------------------------
-
-=================================== EXPLICAÇÃO ===================================
-
-Na impressão do programa, os processos são identificados pelo pid, o termo i 
-representa a atual rajada na qual o mesmo se encontra, e j mostra quantos segundos 
-já foram  percorridos nesta rajada. As filas 1, 2 e 3 apresentam, respectivamente,
-os quantums: 2, 4 e 8.
-
-Inicialmente, os três programas se encontram na primeira fila, sendo o processo 1
-(P1), o primeiro a ser executado. Ela percorre 2 segundos do seu processo até ele
-ser interrompido. Como ele não cumpriu sua rajada em tempo, ele é transferido para
-a segunda fila. 
-P1: (2/4, 0/1, 0/4)
-
-Após a transferência, o processo 2 (P2) é iniciado, percorrendo um segundo. Como
-o mesmo, após um segundo, já conclui sua rajada, ele envia um sinal para aguardar
-a entrada e saída. Como seu tempo não utrapassa o quantum, ele entra na fila de
-espera sem perder a prioridade. 
-P2: (1/1, 0/4, 0/1)
-
-Após P2, o processo 3 (P3) é iniciado. P3 executa por 2 segundos, ultrapassa o
-quantum e é transferido para a segunda fila. 
-P3: (2/16)
-
-Apesar de P2 ter maior prioridade, o mesmo se encontra na fila de espera. Tendo
-isso, como a única fila onde existem processos é a segunda, os processos P1 e P3
-são rodados.
-
-O processo P1 roda por 2 segundos e aguarda a entrada e saída. Como ele concluiu
-sua rajada, ele é encaminhado para a fila de espera, futuramente sendo inserido 
-na primeira fila de processos quando o mesmo for acordado para a próxima rajada.
-P1: (4/4, 0/1, 0/4)
-
-O processo P3 roda por 4 segundos, mas como o mesmo ultrapassa o quantum, ele
-entra na terceira fila de prioridade. 
-P3: (6/16)
-
-Enquanto P3 se encontra na terceira fila de prioridade, P1 e P2 aguardam suas
-respectivas rajadas na primeira fila. Visto que os dois últimos tem prioridade,
-esses são rodados.
-
-Como P2 terminou o I/O antes, ele é iniciado antes de P1. P2 executa por 2 
-segundos, ultrapassa o quantum e agora é transferido para a segunda fila.
-P2: (1/1, 2/4, 0/1)
-    
-Após P2, P1 é iniciado, percorrendo um segundo. Com a rajada concluída, envia 
-um sinal e aguarda a entrada e saída, entrando posteriormente na fila de
-espera sem perder a prioridade.
-P1: (4/4, 1/1, 0/4)
-
-Como P1 se encontra na fila de espera, P2 está na segundo fila e P3 está na 
-terceira fila de espera, P2 é rodado antes de P3.
-
-P2 roda por 2 segundos e conclui sua rajada, aguardando a entrada e saída e 
-sendo subida para a primeira fila. 
-P2: (1/1, 4/4, 0/1)
-
-Após isso, P3 é rodado 8 segundos, ultrapassando mais uma vez o quantum,
-mantendo-se na terceira fila de prioridade.
-P3: (14/16)
-
-Após P3, P1 inicia na primeira fila de prioridade, rodando por dois segundos,
-ultrapassando seu quantum e sendo transferido para a segunda fila.
-P1: (4/4, 1/1, 2/4)
-
-P2 roda após P1, percorrendo por apenas mais um segundo, sendo terminado.
-P2: (1/1, 4/4, 1/1) - CONCLUÍDO
-
-Como P1 se encontra na segunda fila e P3 na terceira, P1 é rodado antes.
-Após percorridos 2 segundos, P1 é concluído.
-P1: (4/4, 1/1, 4/4) - CONCLUÍDO
-
-Por final, P3 percorre por 2 segundos na terceira fila de prioridade, sendo
-concluído com sucesso e encerrando a fila de processos.
-P3: (16/16) - CONCLUÍDO
-
-O escalonador funcionou da maneira prevista.
 

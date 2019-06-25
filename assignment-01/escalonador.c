@@ -70,7 +70,6 @@ fila * esperando;
 processo *proc;
 int nProcs;
 int quantum;
-fila* corrente;
 fila* inferior;
 int nSuperior;
 int nInferior;
@@ -182,7 +181,7 @@ int main (int argc, char* argv[]) {
               
 void manageFila(int prioridade) {
    int ret;
-   
+   fila* corrente;
    pid_t pid;
   
    switch (prioridade) {

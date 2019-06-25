@@ -1,5 +1,0 @@
-A função fork() cria uma nova tarefa (ou um subshell, assim por dizer).
-
-Caso seja de vontade que um processo espere que a outra encerre, pode-se usar a função waitpid.
-
-Existe uma função execve que pode ser utilizar para executar certos programas.
