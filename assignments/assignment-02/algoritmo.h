@@ -1,7 +1,16 @@
 
-int LRU(Frame* listFrames, int lenList);
+typedef struct frame {
 
-int NRU(Frame* listFrames, int lenList);
+   char flagR;
+   char flagW;
+   int time;
+   int virtualIndex;
 
-int NOVO(Frame* listFrames, int lenList, Frame* nextFrames);
+} Frame;
+
+int LRU(Frame* listFrames, int lenList, int* nextIndexes);
+
+int NRU(Frame* listFrames, int lenList, int* nextIndexes);
+
+int NOVO(Frame* listFrames, int lenList, int* nextIndexes);
 
