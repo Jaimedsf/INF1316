@@ -3,6 +3,11 @@
 #include <string.h>
 #include <math.h>
 #include "algoritmo.h"
+#include "fila-acessos.h"
+
+int getNextAcesso(FILE* arq, pFila f, int* virtualIndex, int unusedBits, char* rw);
+
+void fillQueue(FILE* arq, pFila f, int unusedBits, int nAcessos);
 
 int main(int argc, char* argv[]) {
 
@@ -20,9 +25,12 @@ int main(int argc, char* argv[]) {
    Frame* listFrames;
    int* tabPags;
    
+   pFila fil;
+   int* proximosAcessos;
+   
    int(*PageFault)(Frame*, int, int*);
    
-   unsigned int address;
+   int virtualIndex;
    char rw;
    
    int time = 0;
@@ -60,6 +68,9 @@ int main(int argc, char* argv[]) {
    printf("Tamanho das páginas %d\n", pageSize);
    printf("Algoritmo de substituicao: %s\n", algType);
    
+   fil=criaFila(maxFrames);
+   proximosAcessos = (int*)malloc(maxFrames * sizeof(int));
+   
    arq = fopen(fileName, "r");
    	  
    listFrames = malloc(maxFrames * sizeof(Frame));
@@ -69,8 +80,9 @@ int main(int argc, char* argv[]) {
       tabPags[i]=-1;
    }
    
-   while (fscanf(arq, "%x %c", &address, &rw) > -1) {
-      int virtualIndex = address >> s;
+   
+   
+   while (getNextAcesso(arq, fil, &virtualIndex, s, &rw) > -1) {
       int realIndex = tabPags[virtualIndex];
       
       if(time % 10 == 0){
@@ -88,7 +100,26 @@ int main(int argc, char* argv[]) {
       else {
          if(realIndex == -1){
             int newIndex;
-            newIndex = (*PageFault)(listFrames, maxFrames, NULL);
+            int membros;
+            
+            fillQueue(arq, fil, s, maxFrames);
+            getAddrVet(fil, proximosAcessos);
+            membros = getMembros(fil);
+          
+            for(int i=0;i<membros;i++){
+            
+               int IR = tabPags[proximosAcessos[i]];
+               if(IR<0)
+                  proximosAcessos[i]=-1;
+               else
+                  proximosAcessos[i]=IR;
+            }
+               
+            for(int i=membros;i<maxFrames;i++)
+               proximosAcessos[i]=-1;
+               
+            
+            newIndex = (*PageFault)(listFrames, maxFrames, proximosAcessos);
             
             pageFaults++;
             if(listFrames[newIndex].flagW == '1')
@@ -116,6 +147,67 @@ int main(int argc, char* argv[]) {
    printf("Numero de Paginas Escritas: %d\n", pageWrites);
       
    fclose(arq);
+   destroiFila(fil);
+   free(proximosAcessos);
    
    return 0;
 }
+
+
+int getNextAcesso(FILE* arq, pFila f, int* virtualIndex, int unusedBits, char* rw){
+
+   if(getMembros(f) >0){
+   
+      Acesso a = dequeue(f);
+      *virtualIndex = a.address;
+      *rw = a.rw;
+      return 1;
+   }
+   unsigned int addr;
+   int ret = fscanf(arq, "%x %c", &addr, rw);
+   *virtualIndex = addr >> unusedBits;
+   return ret;
+}
+
+void fillQueue(FILE* arq, pFila f, int unusedBits, int nAcessos){
+
+   int unread = nAcessos - getMembros(f);
+   
+   unsigned int addr;
+   char rw;
+   for(int i=0; i<unread ; i++){
+   
+      if (fscanf(arq, "%x %c", &addr, &rw) <= -1 ){
+         return;
+      }
+      
+      addr = addr >> unusedBits;
+      queue(f,addr,rw);
+   }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
