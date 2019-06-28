@@ -1,0 +1,7 @@
+Uma thread é uma linha de execução independente dentro um mesmo processo, ou seja, podem existir várias threads dentro de um processo, e estes obrigatoriamente compartilham os registradores dentro deste processo. Mesmo com o compartilhamento de endereçamento, cada thread tem sua pilha própria. Se duas threads executam o mesmo procedimento, cada uma terá sua própria cópia de variáveis locais.
+
+Para criarmos threads, nós declaramos uma variável de tipo pthread_t e especificamos seu tamanho como se ela fosse um vetor. Após isso utilizamos a função pthread_create que recebe como parâmetro o local da thread, o bloco de código que esta thread irá funcionar e um possível parâmetro para esta função.
+
+Podemos também fazer uso de sincronismo ao se tratar de threads. Ao utilizar a função pthread_join, temos que a thread invocadora é bloqueada até que determinada thread tid termine.
+
+Para encerrarmos uma thread, apenas usamos a função pthread_exit.
