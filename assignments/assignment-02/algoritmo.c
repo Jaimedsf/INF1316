@@ -1,3 +1,7 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+
 #include "algoritmo.h"
 
 int LRU(Frame* listFrames, int lenList, int* nextIndexes) {
@@ -36,6 +40,23 @@ int NRU(Frame* listFrames, int lenList, int* nextIndexes) {
 }
 
 int NOVO(Frame* listFrames, int lenList, int* nextIndexes) {
-	return 0;
-}
 
+	char* possibleIndexes = (char*)malloc(sizeof(char) * lenList);
+  
+   for(int i = 0; i < lenList; ++i)
+  	   possibleIndexes[i] = '1';
+
+	for (int i = 0; i < 50; ++i) {
+	 	if (nextIndexes[i] == -1)
+	   		continue;
+	 	else
+	   		possibleIndexes[nextIndexes[i]] = '0';
+  }
+  
+  for (int i = 0; i < lenList; ++i) {
+      if(possibleIndexes[i] == '1')
+        	return i;
+  }
+  
+  return LRU(listFrames, lenList, nextIndexes);
+}

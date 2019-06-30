@@ -27,6 +27,7 @@ int main(int argc, char* argv[]) {
    
    pFila fil;
    int* proximosAcessos;
+   int tamFila;
    
    int(*PageFault)(Frame*, int, int*);
    
@@ -38,7 +39,7 @@ int main(int argc, char* argv[]) {
    int pageWrites = 0;
 
    if(argc < 5){
-      printf("USO DO PROGRAMA: 'sim-virtual [algoritmo] arquivo.log [tamPag] [tamMem] [-D?]'");
+      printf("USO DO PROGRAMA: 'sim-virtual [algoritmo] arquivo.log [tamPag] [tamMem]'");
       exit(1);
    }
 
@@ -68,8 +69,9 @@ int main(int argc, char* argv[]) {
    printf("Tamanho das páginas %d\n", pageSize);
    printf("Algoritmo de substituicao: %s\n", algType);
    
-   fil=criaFila(maxFrames);
-   proximosAcessos = (int*)malloc(maxFrames * sizeof(int));
+   tamFila = 50;
+   fil=criaFila(tamFila);
+   proximosAcessos = (int*) malloc(tamFila * sizeof(int));
    
    arq = fopen(fileName, "r");
    	  
@@ -84,7 +86,6 @@ int main(int argc, char* argv[]) {
    
    while (getNextAcesso(arq, fil, &virtualIndex, s, &rw) > -1) {
       int realIndex = tabPags[virtualIndex];
-      
       if(time % 10 == 0){
          for(int i = 0; i < loadedFrames;i++) {
             listFrames[i].flagR = '0';
@@ -92,17 +93,19 @@ int main(int argc, char* argv[]) {
       }
       
       
-      if(loadedFrames < maxFrames){
+      if((loadedFrames < maxFrames) && realIndex == -1){
          realIndex = loadedFrames;
          loadedFrames++;
          listFrames[realIndex].flagW = '0';
+         pageFaults++;
+         tabPags[virtualIndex]=realIndex;
       }
       else {
          if(realIndex == -1){
             int newIndex;
             int membros;
             
-            fillQueue(arq, fil, s, maxFrames);
+            fillQueue(arq, fil, s, tamFila);
             getAddrVet(fil, proximosAcessos);
             membros = getMembros(fil);
           
@@ -115,7 +118,7 @@ int main(int argc, char* argv[]) {
                   proximosAcessos[i]=IR;
             }
                
-            for(int i=membros;i<maxFrames;i++)
+            for(int i=membros;i<tamFila;i++)
                proximosAcessos[i]=-1;
                
             
@@ -182,32 +185,8 @@ void fillQueue(FILE* arq, pFila f, int unusedBits, int nAcessos){
       }
       
       addr = addr >> unusedBits;
-      queue(f,addr,rw);
+      queue(f,(int)addr,rw);
    }
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

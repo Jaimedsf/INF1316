@@ -1,0 +1,54 @@
+
+/////////////////////////
+ 
+/////////////////////////
+SIMULADOR.LOG
+Executando o simulador...
+Arquivo de entrada: simulador.log
+Tamanho de memória física: 128
+Tamanho das páginas 16
+Algoritmo de substituicao: LRU
+Numero de Faltas de Paginas: 84753
+Numero de Paginas Escritas: 84741
+ 
+Executando o simulador...
+Arquivo de entrada: simulador.log
+Tamanho de memória física: 128
+Tamanho das páginas 16
+Algoritmo de substituicao: NRU
+Numero de Faltas de Paginas: 108133
+Numero de Paginas Escritas: 108119
+ 
+Executando o simulador...
+Arquivo de entrada: simulador.log
+Tamanho de memória física: 128
+Tamanho das páginas 16
+Algoritmo de substituicao: NOVO
+Numero de Faltas de Paginas: 73197
+Numero de Paginas Escritas: 73184
+ 
+Executando o simulador...
+Arquivo de entrada: simulador.log
+Tamanho de memória física: 128
+Tamanho das páginas 32
+Algoritmo de substituicao: LRU
+Numero de Faltas de Paginas: 153662
+Numero de Paginas Escritas: 153654
+ 
+Executando o simulador...
+Arquivo de entrada: simulador.log
+Tamanho de memória física: 128
+Tamanho das páginas 32
+Algoritmo de substituicao: NRU
+Numero de Faltas de Paginas: 151061
+Numero de Paginas Escritas: 151045
+ 
+Executando o simulador...
+Arquivo de entrada: simulador.log
+Tamanho de memória física: 128
+Tamanho das páginas 32
+Algoritmo de substituicao: NOVO
+Numero de Faltas de Paginas: 134666
+Numero de Paginas Escritas: 134651
+ 
+ 

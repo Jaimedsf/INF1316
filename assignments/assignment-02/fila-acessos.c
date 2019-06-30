@@ -59,6 +59,8 @@ void queue(pFila f, int address, char rw){
       a->address = address;
       a->rw = rw;
       f->membros = f->membros + 1;
+      f->nxt += 1;
+      f->nxt = (f->nxt)%(f->maxMembros);
    }
 
 }
@@ -73,8 +75,9 @@ Acesso dequeue(pFila f){
       
    ret=(f->vet)[f->nxt];
    f->membros -= 1;
-   f->nxt += 1;
-   f->nxt = ((f->nxt) + 1)%f->maxMembros;
+   f->nxt -= 1;
+   if(f->nxt < 0)
+      f->nxt = ((f->maxMembros) - 1);
    return ret;
 }
 
