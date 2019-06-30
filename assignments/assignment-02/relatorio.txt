@@ -3,3 +3,47 @@ PEDRO CHAMBERLAIN MATOS - 1710883
 
 Trabalho 2 de Sistemas Operacionais: Simulador de Memória Virtual
 
+================================== CÓDIGO FONTE ==================================
+
+Dentro do projeto, temos três arquivos .c: sim-virtual.c, fila-acessos e
+algoritmo. O arquivo sim-virtual.c é o principal, contendo o simulador de memória
+virtual. É ele que recebe o nome do arquivo a ser rodado, o nome do algoritmo a
+ser utilizado, o tamanho das páginas e a memória física da simulação.
+
+Para elaborar a fila de acessos prescrita pelo arquivo especificado, utilizamos
+o arquivo fila-acessos.c, que constrói e enfileira as páginas a ser mapeadas pelo
+algoritmo escolhido.
+
+Para utilizar os algoritmos de LRU, NRU e NOVO (algoritmo ótimo), esses estão
+escritos no arquivo algoritmo.c.
+
+Para compilar o simulador no terminal:
+$gcc sim-virtual.c fila-acessos.c algoritmo.c -o sim -lm
+
+E para rodar (exemplo):
+$./sim teste.log LRU 16 128
+
+O código fonte do simulador pode ser conferido no anexo na pasta src.
+
+================================= ALGORITMO NOVO =================================
+
+O algoritmo NOVO utiliza a informação dos próximos acessos no futuro, coisa que é impossível na pratica. Ele examina os proximos 50 acessos e em quais frames estão carregadas (se estiverem de fato carregadas). Se existir algum frame que não é
+utilizado nesses 50 acessos, ele é escolhido para ser sobrescrito. Se todos os
+frames são utilizados nesse periodo, o algoritmo se comporta identicamente ao LRU.
+
+=========================== ANÁLISE DOS TRÊS ALGORITMOS ==========================
+
+Para analisarmos os 3 algoritmos, utilizamos os 4 programas oferecidos para teste
+de paginação. Para o teste, utilizamos um sistema com memória física de 128KB, e
+alternamos o tamanho de páginas entre 16 e 32 para compararmos os resultados entre
+os dois respectivos tamanhos.
+
+Na nossa análise, encontramos que o algoritmo novo operou melhor em todos testes
+quando comparado aos algoritmos LRU e NRU, sendo sempre o algoritmo que aplicava
+menos page-faults. Já comparando apenas os algoritmos LRU e NRU, o LRU é o que,
+pelo menos dentro da nossa aplicação, mais se destaca, tendo ocasionais testes
+onde ele aparece como menos efeiciente que o NRU.
+
+A análise dos algoritmos pode ser conferida em anexo no arquivo resultados.pdf.
+
+
